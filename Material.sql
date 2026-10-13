@@ -5,5 +5,5 @@ CREATE TABLE Material (
   [Composition] FLOAT,
   [Stock] INT,
   FOREIGN KEY ([SupplierID]) REFERENCES Supplier ([SupplierID])
-  )
+  );
   
