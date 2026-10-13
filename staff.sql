@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Staff(
+    [StaffID] INT PRIMARY KEY,
+    [EngineerName] VARCHAR(100)
+);
