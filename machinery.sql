@@ -1,4 +1,4 @@
-PRAGMA foreign_keys = ON; 
+PRAGMA foreign_keys = ON; /*if we're doing in sqlite*/
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT,
