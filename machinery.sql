@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON; 
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT,
