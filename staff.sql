@@ -15,3 +15,12 @@ VALUES
 (8, 'Olivia Thomas'),
 (9, 'James Taylor'),
 (10, 'Sophia Moore');
+(12, 'William Jackson'),
+(13, 'Ava White'),
+(14, 'Alexander Harris'),
+(15, 'Mia Clark'),
+(16, 'Benjamin Lewis'),
+(17, 'Charlotte Robinson'),
+(18, 'Ethan Walker'),
+(19, 'Amelia Hall'),
+(20, 'Lucas Allen');
