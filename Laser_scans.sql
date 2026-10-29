@@ -1,8 +1,8 @@
 CREATE TABLE Laser_scans(
-  [LaserID] INT PRIMARY KEY,
-  [LaserDate] DATE,
-  [Description] TEXT,
-  [Statuts] Boolean
+  LaserID INT PRIMARY KEY,
+  LaserDate DATE,
+  Description TEXT,
+  Status Boolean
 );
 
 INSERT INTO Laser_scans (LaserID, LaserDate, Description, Status) VALUES

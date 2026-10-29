@@ -1,10 +1,10 @@
 CREATE TABLE Initial_check (
-    [InitialCheckID] INT PRIMARY KEY,
-    [MachineryID] INT ,   
-    [RecordDate] DATE,
-    [StressID] INT,   
-    [QualityID] INT,   
-    [LaserID] INT, 
+    InitialCheckID INT PRIMARY KEY,
+    MachineryID INT ,   
+    RecordDate DATE,
+    StressID INT,   
+    QualityID INT,   
+    LaserID INT, 
     FOREIGN KEY (MachineryID) REFERENCES [Machinery](MachineryID),
     FOREIGN KEY (StressID) REFERENCES [Stress_test](StressID),
     FOREIGN KEY (QualityID) REFERENCES [Quality_control](QualityID),
@@ -12,7 +12,7 @@ CREATE TABLE Initial_check (
 );
 
 INSERT INTO Initial_check (
-    InitiaCheckID, MachineryID, RecordDate, StressID, QualityID, LaserID) VALUES
+    InitialCheckID, MachineryID, RecordDate, StressID, QualityID, LaserID) VALUES
 (1, 1, '2026-01-10', 1,  1,  1),
 (2, 2, '2026-01-12', 2,  2,  2),
 (3, 3, '2026-01-17', 3,  3,  3),

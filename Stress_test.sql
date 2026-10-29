@@ -1,8 +1,8 @@
 CREATE TABLE Stress_test(
-  [StressID] INT PRIMARY KEY,
-  [StressDate] DATE,
-  [Description] TEXT,
-  [Statuts] Boolean
+  StressID INT PRIMARY KEY,
+  StressDate DATE,
+  Description TEXT,
+  Status Boolean
 );
 
 INSERT INTO Stress_test (StressID, StressDate, Description, Status) VALUES
