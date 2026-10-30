@@ -1,31 +1,32 @@
 CREATE TABLE Material (
-  [MaterialID] INT PRIMARY KEY,
-  [SupplierID] INT,
-  [MaterialDate] DATE,
-  [Composition] FLOAT,
-  [Stock] INT,
-  FOREIGN KEY ([SupplierID]) REFERENCES Supplier ([SupplierID])
-  );
-  
-INSERT INTO Material (MaterialID, SupplierID, MaterialDate, Composition, Stock)
+  MaterialID INT PRIMARY KEY,
+  SupplierID INT NOT NULL,
+  MaterialName VARCHAR(100) NOT NULL,
+  MaterialDate DATE,
+  Composition DECIMAL(5,2) CHECK (Composition >= 0 AND Composition <= 100),
+  Stock INT CHECK (Stock >= 0),
+  FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
+);
+
+INSERT INTO Material (MaterialID, SupplierID, MaterialName, MaterialDate, Composition, Stock) 
 VALUES
-    (1,  1, '2026-01-05', 85.5,  500),
-    (2,  2, '2026-01-08', 92.0,  350),
-    (3,  3, '2026-01-12', 75.5,  420),
-    (4,  4, '2026-01-15', 60.0,  280),
-    (5,  5, '2026-01-20', 98.5,  600),
-    (6,  1, '2026-01-25', 88.0,  450),
-    (7,  2, '2026-02-02', 70.5,  320),
-    (8,  3, '2026-02-06', 95.0,  550),
-    (9,  4, '2026-02-10', 82.5,  400),
-    (10, 5, '2026-02-14', 65.0,  250),
-    (11, 1, '2026-02-18', 90.5,  280),
-    (12, 2, '2026-02-22', 78.0,  360),
-    (13, 3, '2026-03-01', 87.5,  520),
-    (14, 4, '2026-03-05', 55.0,  200),
-    (15, 5, '2026-03-09', 99.0,  650),
-    (16, 1, '2026-03-13', 72.5,  300),
-    (17, 2, '2026-03-17', 93.5,  570),
-    (18, 3, '2026-03-21', 80.0,  390),
-    (19, 4, '2026-03-25', 68.5,  275),
-    (20, 5, '2026-03-29', 96.5,  610);
+(1,  1, 'Portland Cement',           '2026-01-05', 85.50, 500),
+(2,  2, 'Portland Cement',           '2026-01-08', 86.00, 350),
+(3,  3, 'Washed Sand',               '2026-01-12', 94.00, 420),
+(4,  4, 'Structural Steel Plate',    '2026-01-15', 98.00, 280),
+(5,  5, 'Hydrated Lime',             '2026-01-20', 92.00, 600),
+(6,  1, 'Washed Sand',               '2026-01-25', 92.50, 450),
+(7,  2, 'Steel Rebar',               '2026-02-02', 98.50, 320),
+(8,  3, 'Copper Wire',               '2026-02-06', 99.90, 550),
+(9,  4, 'Steel Rebar',               '2026-02-10', 98.00, 400),
+(10, 5, 'Copper Wire',               '2026-02-14', 99.50, 250),
+(11, 1, 'Hydrated Lime',             '2026-02-18', 90.50, 280),
+(12, 2, 'Structural Steel Plate',    '2026-02-22', 97.50, 360),
+(13, 3, 'Gypsum Plaster',            '2026-03-01', 93.00, 520),
+(14, 4, 'Gypsum Plaster',            '2026-03-05', 91.50, 200),
+(15, 5, 'Portland Cement',           '2026-03-09', 85.00, 650),
+(16, 1, 'Crushed Granite Aggregate', '2026-03-13', 72.00, 300),
+(17, 2, 'Crushed Granite Aggregate', '2026-03-17', 71.00, 570),
+(18, 3, 'Washed Sand',               '2026-03-21', 93.50, 390),
+(19, 4, 'Crushed Granite Aggregate', '2026-03-25', 73.50, 275),
+(20, 5, 'Steel Rebar',               '2026-03-29', 97.80, 610);

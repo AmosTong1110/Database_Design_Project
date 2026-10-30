@@ -1,7 +1,7 @@
 CREATE TABLE Supplier(
-  [SupplierID] INT PRIMARY KEY,
-  [SupplierName] VARCHAR(100),
-  [ContactDetails] VARCHAR(100),
+  SupplierID INT PRIMARY KEY,
+  SupplierName VARCHAR(100),
+  ContactDetails VARCHAR(100)
   );
   
 INSERT INTO Supplier (SupplierID, SupplierName, ContactDetails) VALUES
