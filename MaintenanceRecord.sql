@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS MaintenanceRecord(
+CREATE TABLE MaintenanceRecord(
     RecordID INT PRIMARY KEY,
     StaffID INT, -- foreign key to Staff table
     MachineryID INT, -- foreign key to Machinery table
