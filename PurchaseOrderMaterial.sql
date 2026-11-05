@@ -10,7 +10,15 @@ CREATE TABLE PurchaseOrderMaterial (
 
 INSERT INTO PurchaseOrderMaterial (OrderID, MaterialID, Quantity, UnitPrice) 
 VALUES
-(9,  1,  500, 12.50),
+(1, 2, 150, 15.00),
+(2, 3, 500, 9.80),
+(3, 4, 200, 45.00),
+(4, 5, 450, 6.20),
+(4, 6, 300, 8.75),
+(5, 7, 250, 22.40),
+(6, 8, 400, 31.00),
+(7, 9, 350, 18.60),
+(8, 10, 180, 27.30),
 (9,  6,  450,  8.75),
 (10, 2,  350, 15.00),
 (10, 7,  320, 22.40),
