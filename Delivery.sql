@@ -3,7 +3,7 @@ CREATE TABLE Delivery (
     OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
     ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
     ReceivedDate DATE,
-    Remarks TEXT,
+    Remarks VARCHAR(255),
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (ReceivedBy) REFERENCES Staff(StaffID)
 );

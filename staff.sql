@@ -1,11 +1,11 @@
-CREATE TABLE IF NOT EXISTS Staff(
+CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
-    EngineerName VARCHAR(100),
+    StaffName VARCHAR(100),
     Role VARCHAR(50) NOT NULL
         CHECK (Role IN ('Engineer', 'Technical Staff', 'Procurement Officer', 'Compliance Officer', 'Admin'))
 );
 
-INSERT INTO Staff (StaffID, EngineerName, Role) 
+INSERT INTO Staff (StaffID, StaffName, Role) 
 VALUES
 (1, 'John Smith', 'Engineer'),
 (2, 'Emily Johnson', 'Engineer'),
