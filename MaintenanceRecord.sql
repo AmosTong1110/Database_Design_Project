@@ -37,9 +37,3 @@ VALUES
     (21, 4, 7,  'Hydraulic Repair', '2026-03-10', 'photos/maintenance/rec_21.jpg', 38.00, NULL),
     (22, 5, 11, 'Safety Check',     '2026-03-12', 'photos/maintenance/rec_22.jpg', 22.50, NULL);
 
---allows staff to filter records based on periods
-SELECT *
-FROM MaintenanceRecord
-WHERE EXTRACT(MONTH FROM CreatedDate) = :month
-AND EXTRACT(YEAR FROM CreatedDate) = :year
-ORDER BY CreatedDate;
