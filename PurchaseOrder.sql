@@ -63,9 +63,3 @@ VALUES
 (41,  3,  6, 11, '2026-04-06', '2026-04-14', 'Pending'),
 (42,  5,  7, 12, '2026-04-10', '2026-04-18', 'Pending');
 
--- allows client to filter data by month
-SELECT *
-FROM PurchaseOrder
-WHERE EXTRACT(MONTH FROM OrderDate) = :month
-AND EXTRACT(YEAR FROM OrderDate) = :year
-ORDER BY OrderDate;
