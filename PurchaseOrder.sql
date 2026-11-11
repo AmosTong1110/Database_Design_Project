@@ -62,3 +62,11 @@ VALUES
 -- Restock orders still waiting for delivery (41-42)
 (41,  3,  6, 11, '2026-04-06', '2026-04-14', 'Pending'),
 (42,  5,  7, 12, '2026-04-10', '2026-04-18', 'Pending');
+
+-- arrange by order date chronologically
+SELECT *
+FROM PurchaseOrder
+ORDER BY
+    EXTRACT(YEAR FROM OrderDate),
+    EXTRACT(MONTH FROM OrderDate),
+    OrderDate;
