@@ -66,6 +66,6 @@ VALUES
 -- allows client to filter data by month
 SELECT *
 FROM PurchaseOrder
-WHERE EXTRACT(MONTH FROM OrderDate) = &Enter_Month
-AND EXTRACT(YEAR FROM OrderDate) = &Enter_Year
+WHERE EXTRACT(MONTH FROM OrderDate) = :month
+AND EXTRACT(YEAR FROM OrderDate) = :year
 ORDER BY OrderDate;
