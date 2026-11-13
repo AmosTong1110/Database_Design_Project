@@ -53,33 +53,34 @@ CATEGORIES = {
     "Initial Checks": dict(
         sql="""SELECT i.InitialCheckID AS ID, i.RecordDate AS Date,
                       mc.MachineryName AS Machine,
-                      """ + PASS_FAIL.format(c="st.Status") + """ AS Stress,
-                      """ + PASS_FAIL.format(c="q.Status") + """ AS Quality,
-                      """ + PASS_FAIL.format(c="l.Status") + """ AS Laser
+                      (SELECT COUNT(*) FROM InspectionTest t WHERE t.InitialCheckID = i.InitialCheckID) AS 'Total Tests',
+                      (SELECT COUNT(*) FROM InspectionTest t WHERE t.InitialCheckID = i.InitialCheckID AND t.Passed = 1) AS 'Passed Tests'
                FROM Initial_check i
-               JOIN Machinery mc ON i.MachineryID = mc.MachineryID
-               LEFT JOIN Stress_test st ON i.StressID = st.StressID
-               LEFT JOIN Quality_control q ON i.QualityID = q.QualityID
-               LEFT JOIN Laser_scans l ON i.LaserID = l.LaserID""",
+               JOIN Machinery mc ON i.MachineryID = mc.MachineryID""",
         date="i.RecordDate", mine=None),
-    "Stress Tests": dict(
-        sql="SELECT StressID AS ID, StressDate AS Date, Description, "
-            + PASS_FAIL.format(c="Status") + " AS Result FROM Stress_test",
-        date="StressDate", mine=None),
-    "Quality Control": dict(
-        sql="SELECT QualityID AS ID, QualityDate AS Date, Description, "
-            + PASS_FAIL.format(c="Status") + " AS Result FROM Quality_control",
-        date="QualityDate", mine=None),
-    "Laser Scans": dict(
-        sql="SELECT LaserID AS ID, LaserDate AS Date, Description, "
-            + PASS_FAIL.format(c="Status") + " AS Result FROM Laser_scans",
-        date="LaserDate", mine=None),
+    "Inspection Tests": dict(
+        sql="""SELECT t.TestID AS ID, t.TestDate AS Date,
+                      mc.MachineryName AS Machine,
+                      t.TestType AS 'Test Type',
+                      """ + PASS_FAIL.format(c="t.Passed") + """ AS Result,
+                      t.Description
+               FROM InspectionTest t
+               JOIN Initial_check i ON t.InitialCheckID = i.InitialCheckID
+               JOIN Machinery mc ON i.MachineryID = mc.MachineryID""",
+        date="t.TestDate", mine=None),
     "Materials": dict(
         sql="""SELECT m.MaterialID AS ID, m.MaterialDate AS Date,
                       m.MaterialName AS Material, s.SupplierName AS Supplier,
-                      m.Composition AS 'Composition %', m.Stock
+                      m.Stock
                FROM Material m
                JOIN Supplier s ON m.SupplierID = s.SupplierID""",
+        date="m.MaterialDate", mine=None),
+    "Material Compositions": dict(
+        sql="""SELECT mc.MaterialID AS ID, m.MaterialDate AS Date,
+                      m.MaterialName AS Material, mc.ElementName AS Element,
+                      mc.Percentage || '%' AS 'Percentage'
+               FROM MaterialComposition mc
+               JOIN Material m ON mc.MaterialID = m.MaterialID""",
         date="m.MaterialDate", mine=None),
 }
 
@@ -120,9 +121,7 @@ def get_years():
             SELECT strftime('%Y', OrderDate) FROM PurchaseOrder UNION
             SELECT strftime('%Y', ReceivedDate) FROM Delivery UNION
             SELECT strftime('%Y', RecordDate) FROM Initial_check UNION
-            SELECT strftime('%Y', StressDate) FROM Stress_test UNION
-            SELECT strftime('%Y', QualityDate) FROM Quality_control UNION
-            SELECT strftime('%Y', LaserDate) FROM Laser_scans UNION
+            SELECT strftime('%Y', TestDate) FROM InspectionTest UNION
             SELECT strftime('%Y', MaterialDate) FROM Material
         ) WHERE y IS NOT NULL ORDER BY y"""
     return [r[0] for r in query(sql)[1]]
