@@ -1,19 +1,19 @@
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
-    RequestBy INT, -- Foreign key referencing StaffID in Staff table
+    RequestedBy INT, -- Foreign key referencing StaffID in Staff table
     ApprovedBy INT, -- Foreign key referencing StaffID in Staff table
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
     Status VARCHAR(25),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
-    FOREIGN KEY (RequestBy) REFERENCES Staff(StaffID),
+    FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
-    CHECK (ApprovedBy <> RequestBy)
+    CHECK (ApprovedBy <> RequestedBy)
 );
 
 INSERT INTO PurchaseOrder
-(OrderID, SupplierID, RequestBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
+(OrderID, SupplierID, RequestedBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
 VALUES
 -- Machinery purchase orders (1–20)
 (1,  1,  6, 11, '2025-12-15', '2026-01-02', 'Delivered'),

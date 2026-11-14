@@ -4,7 +4,7 @@ CREATE TABLE Machinery(
   MachineryName VARCHAR(100),
   Description VARCHAR(255),
   PhotoPath VARCHAR(255),
-  Status VARCHAR(50) NOT NULL DEFAULT 'Available'
+  Status VARCHAR(25) NOT NULL DEFAULT 'Available'
     CHECK (Status IN ('Available', 'In Use', 'Under Maintenance', 'Out of Service')),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );

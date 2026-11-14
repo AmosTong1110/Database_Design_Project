@@ -1,6 +1,6 @@
 CREATE TABLE Initial_check (
     InitialCheckID INT PRIMARY KEY,
-    MachineryID INT NOT NULL,
+    MachineryID INT NOT NULL UNIQUE,
     RecordDate DATE,
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
 );

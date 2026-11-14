@@ -1,7 +1,7 @@
 CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
     StaffName VARCHAR(100),
-    Role VARCHAR(50) NOT NULL
+    Role VARCHAR(25) NOT NULL
         CHECK (Role IN ('Engineer', 'Technical Staff', 'Procurement Officer', 'Compliance Officer', 'Admin'))
 );
 

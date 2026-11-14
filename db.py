@@ -24,43 +24,45 @@ SCHEMA_SQL = """
 CREATE TABLE Supplier(
   SupplierID INT PRIMARY KEY,
   SupplierName VARCHAR(100),
-  ContactDetails VARCHAR(100)
+  Phone VARCHAR(20),
+  Email VARCHAR(50),
+  Address VARCHAR(255)
 );
 
-INSERT INTO Supplier (SupplierID, SupplierName, ContactDetails)
+INSERT INTO Supplier (SupplierID, SupplierName, Phone, Email, Address) 
 VALUES
-(1, 'BuildPro Construction Supplies', 'sales@buildpro.com'),
-(2, 'Titan Heavy Equipment', '+60-12-345-6781'),
-(3, 'Cemex Building Materials', 'contact@cemexbuild.com'),
-(4, 'Apex Crane and Lifting Solutions', '+60-12-345-6782'),
-(5, 'SteelCore Manufacturing', 'sales@steelcore.com'),
-(6, 'Prime Earthmoving Equipment', '+60-12-345-6783'),
-(7, 'RoadMaster Machinery', 'support@roadmaster.com'),
-(8, 'HeavyHaul Transport Solutions', '+60-12-345-6784'),
-(9, 'TerraBuild Machinery', 'info@terrabuild.com'),
-(10, 'ConcreteTech Equipment', '+60-12-345-6785'),
-(11, 'PowerLift Industrial Supplies', 'sales@powerlift.com'),
-(12, 'AsphaltPro Construction Systems', '+60-12-345-6786'),
-(13, 'GroundForce Engineering', 'contact@groundforce.com'),
-(14, 'Compac Construction Equipment', '+60-12-345-6787'),
-(15, 'SkyReach Crane Services', 'info@skyreach.com'),
-(16, 'ReadyMix Concrete Solutions', '+60-12-345-6788'),
-(17, 'FoundationWorks Engineering', 'sales@foundationworks.com'),
-(18, 'SafeHeight Access Equipment', '+60-12-345-6789'),
-(19, 'RockSolid Building Materials', 'contact@rocksolid.com'),
-(20, 'DemolishPro Machinery', '+60-12-345-6790');
+(1, 'BuildPro Construction Supplies', NULL, 'sales@buildpro.com', NULL),
+(2, 'Titan Heavy Equipment', '+60-12-345-6781', NULL, NULL),
+(3, 'Cemex Building Materials', NULL, 'contact@cemexbuild.com', NULL),
+(4, 'Apex Crane and Lifting Solutions', '+60-12-345-6782', NULL, NULL),
+(5, 'SteelCore Manufacturing', NULL, 'sales@steelcore.com', NULL),
+(6, 'Prime Earthmoving Equipment', '+60-12-345-6783', NULL, NULL),
+(7, 'RoadMaster Machinery', NULL, 'support@roadmaster.com', NULL),
+(8, 'HeavyHaul Transport Solutions', '+60-12-345-6784', NULL, NULL),
+(9, 'TerraBuild Machinery', NULL, 'info@terrabuild.com', NULL),
+(10, 'ConcreteTech Equipment', '+60-12-345-6785', NULL, NULL),
+(11, 'PowerLift Industrial Supplies', NULL, 'sales@powerlift.com', NULL),
+(12, 'AsphaltPro Construction Systems', '+60-12-345-6786', NULL, NULL),
+(13, 'GroundForce Engineering', NULL, 'contact@groundforce.com', NULL),
+(14, 'Compac Construction Equipment', '+60-12-345-6787', NULL, NULL),
+(15, 'SkyReach Crane Services', NULL, 'info@skyreach.com', NULL),
+(16, 'ReadyMix Concrete Solutions', '+60-12-345-6788', NULL, NULL),
+(17, 'FoundationWorks Engineering', NULL, 'sales@foundationworks.com', NULL),
+(18, 'SafeHeight Access Equipment', '+60-12-345-6789', NULL, NULL),
+(19, 'RockSolid Building Materials', NULL, 'contact@rocksolid.com', NULL),
+(20, 'DemolishPro Machinery', '+60-12-345-6790', NULL, NULL);
 
 -- =====================================================================
 -- 2. Staff
 -- =====================================================================
 CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
-    EngineerName VARCHAR(100),
-    Role VARCHAR(50) NOT NULL
+    StaffName VARCHAR(100),
+    Role VARCHAR(25) NOT NULL
         CHECK (Role IN ('Engineer', 'Technical Staff', 'Procurement Officer', 'Compliance Officer', 'Admin'))
 );
 
-INSERT INTO Staff (StaffID, EngineerName, Role)
+INSERT INTO Staff (StaffID, StaffName, Role)
 VALUES
 (1, 'John Smith', 'Engineer'),
 (2, 'Emily Johnson', 'Engineer'),
@@ -92,7 +94,7 @@ CREATE TABLE Machinery(
   MachineryName VARCHAR(100),
   Description VARCHAR(255),
   PhotoPath VARCHAR(255),
-  Status VARCHAR(50) NOT NULL DEFAULT 'Available'
+  Status VARCHAR(25) NOT NULL DEFAULT 'Available'
     CHECK (Status IN ('Available', 'In Use', 'Under Maintenance', 'Out of Service')),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
@@ -127,12 +129,12 @@ CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
   MaterialName VARCHAR(100) NOT NULL,
-  MaterialDate DATE,
+  StockInDate DATE,
   Stock INT CHECK (Stock >= 0),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
 
-INSERT INTO Material (MaterialID, SupplierID, MaterialName, MaterialDate, Stock)
+INSERT INTO Material (MaterialID, SupplierID, MaterialName, StockInDate, Stock)
 VALUES
 (1,  1, 'Portland Cement',           '2026-01-05', 500),
 (2,  2, 'Portland Cement',           '2026-01-08', 350),
@@ -236,7 +238,7 @@ INSERT INTO MaterialComposition (MaterialID, ElementName, Percentage) VALUES
 -- =====================================================================
 CREATE TABLE Initial_check (
     InitialCheckID INT PRIMARY KEY,
-    MachineryID INT NOT NULL,
+    MachineryID INT NOT NULL UNIQUE,
     RecordDate DATE,
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
 );
@@ -341,13 +343,12 @@ INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Descript
 -- =====================================================================
 -- 9. MaintenanceRecord
 -- =====================================================================
-CREATE TABLE MaintenanceRecord(
+CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
     StaffID INT, -- foreign key to Staff table
     MachineryID INT, -- foreign key to Machinery table
     RecordType VARCHAR(50), -- type of maintenance performed
     CreatedDate DATE,
-    PhotoPath VARCHAR(255),
     DamagePercentage DECIMAL(5,2) CHECK (DamagePercentage >= 0 AND DamagePercentage <= 100), -- record dmg percentage of machinery
     PreviousRecordID INT,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
@@ -355,28 +356,30 @@ CREATE TABLE MaintenanceRecord(
     FOREIGN KEY (PreviousRecordID) REFERENCES MaintenanceRecord(RecordID)
 );
 
-INSERT INTO MaintenanceRecord (RecordID, StaffID, MachineryID, RecordType, CreatedDate, PhotoPath, DamagePercentage, PreviousRecordID)
+INSERT INTO MaintenanceRecord (RecordID, StaffID, MachineryID, RecordType, CreatedDate, DamagePercentage, PreviousRecordID)
 VALUES
-    (1,  1, 1, 'Routine Inspection',  '2026-01-20', 'photos/maintenance/rec_01.jpg',  0.00, NULL),
-    (2,  2, 2, 'Lubrication',         '2026-01-22', 'photos/maintenance/rec_02.jpg',  5.50, 1),
-    (3,  3, 3, 'Component Repair',    '2026-01-27', 'photos/maintenance/rec_03.jpg', 25.00, 2),
-    (4,  4, 4, 'Safety Check',        '2026-01-29', 'photos/maintenance/rec_04.jpg',  2.00, 3),
-    (5,  5, 5, 'Motor Replacement',   '2026-01-31', 'photos/maintenance/rec_05.jpg', 65.00, 4),
-    (6,  1, 2, 'Routine Inspection',  '2026-02-02', 'photos/maintenance/rec_06.jpg',  0.00, 5),
-    (7,  2, 3, 'Belt Replacement',    '2026-02-05', 'photos/maintenance/rec_07.jpg', 18.50, 6),
-    (8,  3, 4, 'Electrical Repair',   '2026-02-10', 'photos/maintenance/rec_08.jpg', 35.00, 7),
-    (9,  4, 5, 'Lubrication',         '2026-02-14', 'photos/maintenance/rec_09.jpg',  4.00, 8),
-    (10, 5, 1, 'Hydraulic Repair',    '2026-02-18', 'photos/maintenance/rec_10.jpg', 42.75, 9),
-    (11, 1, 3, 'Safety Check',        '2026-03-01', 'photos/maintenance/rec_11.jpg',  1.50, 10),
-    (12, 2, 4, 'Component Repair',    '2026-03-05', 'photos/maintenance/rec_12.jpg', 28.00, 11),
-    (13, 3, 5, 'Routine Inspection',  '2026-03-09', 'photos/maintenance/rec_13.jpg',  0.00, 12),
-    (14, 4, 1, 'Bearing Replacement', '2026-03-13', 'photos/maintenance/rec_14.jpg', 55.25, 13),
-    (15, 5, 2, 'Electrical Repair',   '2026-03-18', 'photos/maintenance/rec_15.jpg', 32.00, 14),
-    (16, 1, 4, 'Lubrication',         '2026-04-02', 'photos/maintenance/rec_16.jpg',  3.50, 15),
-    (17, 2, 5, 'Motor Replacement',   '2026-04-07', 'photos/maintenance/rec_17.jpg', 78.00, 16),
-    (18, 3, 1, 'Safety Check',        '2026-04-12', 'photos/maintenance/rec_18.jpg',  0.50, 17),
-    (19, 4, 2, 'Hydraulic Repair',    '2026-04-17', 'photos/maintenance/rec_19.jpg', 46.00, 18),
-    (20, 5, 3, 'Routine Inspection',  '2026-04-22', 'photos/maintenance/rec_20.jpg',  0.00, 19);
+    (1,  1, 1, 'Routine Inspection',  '2026-01-20',  0.00, NULL),
+    (2,  2, 2, 'Lubrication',         '2026-01-22',  5.50, NULL),
+    (3,  3, 3, 'Component Repair',    '2026-01-27', 25.00, NULL),
+    (4,  4, 4, 'Safety Check',        '2026-01-29',  2.00, NULL),
+    (5,  5, 5, 'Motor Replacement',   '2026-01-31', 65.00, NULL),
+    (6,  1, 2, 'Routine Inspection',  '2026-02-02',  0.00, 2),
+    (7,  2, 3, 'Belt Replacement',    '2026-02-05', 18.50, 3),
+    (8,  3, 4, 'Electrical Repair',   '2026-02-10', 35.00, 4),
+    (9,  4, 5, 'Lubrication',         '2026-02-14',  4.00, 5),
+    (10, 5, 1, 'Hydraulic Repair',    '2026-02-18', 42.75, 1),
+    (11, 1, 3, 'Safety Check',        '2026-03-01',  1.50, 7),
+    (12, 2, 4, 'Component Repair',    '2026-03-05', 28.00, 8),
+    (13, 3, 5, 'Routine Inspection',  '2026-03-09',  0.00, 9),
+    (14, 4, 1, 'Bearing Replacement', '2026-03-13', 55.25, 10),
+    (15, 5, 2, 'Electrical Repair',   '2026-03-18', 32.00, 6),
+    (16, 1, 4, 'Lubrication',         '2026-04-02',  3.50, 12),
+    (17, 2, 5, 'Motor Replacement',   '2026-04-07', 78.00, 13),
+    (18, 3, 1, 'Safety Check',        '2026-04-12',  0.50, 14),
+    (19, 4, 2, 'Hydraulic Repair',    '2026-04-17', 46.00, 15),
+    (20, 5, 3, 'Routine Inspection',  '2026-04-22',  0.00, 11),
+    (21, 4, 7,  'Hydraulic Repair',   '2026-03-10', 38.00, NULL),
+    (22, 5, 11, 'Safety Check',       '2026-03-12', 22.50, NULL);
 
 -- =====================================================================
 -- 10. PurchaseOrder
@@ -384,18 +387,18 @@ VALUES
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL,
-    RequestBy INT,
+    RequestedBy INT,
     ApprovedBy INT,
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
     Status VARCHAR(25),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
-    FOREIGN KEY (RequestBy) REFERENCES Staff(StaffID),
+    FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
-    CHECK (ApprovedBy <> RequestBy)
+    CHECK (ApprovedBy <> RequestedBy)
 );
 
-INSERT INTO PurchaseOrder (OrderID, SupplierID, RequestBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
+INSERT INTO PurchaseOrder (OrderID, SupplierID, RequestedBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
 VALUES
 (1,  1,  6, 11, '2025-12-15', '2026-01-02', 'Delivered'),
 (2,  2,  7, 12, '2025-12-18', '2026-01-05', 'Delivered'),
@@ -425,33 +428,34 @@ CREATE TABLE PurchaseOrderMachinery (
     OrderID INT,
     MachineryID INT,
     UnitPrice DECIMAL(10, 2) NOT NULL CHECK (UnitPrice >= 0),
+    Quantity INT NOT NULL DEFAULT 1 CHECK (Quantity > 0),
     PRIMARY KEY (OrderID, MachineryID),
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
 );
 
-INSERT INTO PurchaseOrderMachinery (OrderID, MachineryID, UnitPrice)
+INSERT INTO PurchaseOrderMachinery (OrderID, MachineryID, UnitPrice, Quantity)
 VALUES
-(1, 1, 48500.00),
-(2, 2, 125000.00),
-(3, 3, 89000.00),
-(4, 4, 76500.00),
-(5, 5, 112000.00),
-(6, 6, 18900.00),
-(7, 9, 9800.00),
-(8, 10, 14500.00),
-(9, 3, 89500.00),
-(10, 2, 125000.00),
-(11, 5, 112000.00),
-(12, 6, 18900.00),
-(13, 7, 54000.00),
-(14, 8, 38500.00),
-(15, 9, 9800.00),
-(16, 1, 48500.00),
-(17, 2, 128000.00),
-(18, 3, 90000.00),
-(19, 4, 77000.00),
-(20, 5, 115000.00);
+(1,  1, 48500.00, 1),
+(2,  2, 125000.00, 1),
+(3,  3, 89000.00, 1),
+(4,  4, 76500.00, 1),
+(5,  5, 112000.00, 1),
+(6,  6, 18900.00, 1),
+(7,  7, 54000.00, 1),
+(8,  8, 38500.00, 1),
+(9,  9, 9800.00, 1),
+(10, 10, 14500.00, 1),
+(11, 11, 18900.00, 1),
+(12, 12, 250000.00, 1),
+(13, 13, 180000.00, 1),
+(14, 14, 5400.00, 1),
+(15, 15, 540000.00, 1),
+(16, 16, 385000.00, 1),
+(17, 17, 128000.00, 1),
+(18, 18, 38500.00, 1),
+(19, 19, 9800.00, 1),
+(20, 20, 125000.00, 1);
 
 -- =====================================================================
 -- 12. PurchaseOrderMaterial

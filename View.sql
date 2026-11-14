@@ -49,7 +49,7 @@ SELECT it.TestType, it.TestID, it.TestDate,
        CONCAT(IF(it.Passed, 'Pass', 'FAIL'), ' - ', it.Description)
 FROM InspectionTest it
 UNION ALL
-SELECT 'Material', m.MaterialID, m.MaterialDate,
+SELECT 'Material', m.MaterialID, m.StockInDate,
        CONCAT(m.MaterialName, ' - ', s.SupplierName, ' (stock ', m.Stock, ')')
 FROM Material m
 JOIN Supplier s ON s.SupplierID = m.SupplierID;

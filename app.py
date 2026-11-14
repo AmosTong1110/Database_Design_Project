@@ -27,7 +27,7 @@ CATEGORIES = {
     "Maintenance Records": dict(
         sql="""SELECT m.RecordID AS ID, m.CreatedDate AS Date,
                       mc.MachineryName AS Machine, m.RecordType AS Type,
-                      s.EngineerName AS Staff, m.DamagePercentage AS 'Damage %'
+                      s.StaffName AS Staff, m.DamagePercentage AS 'Damage %'
                FROM MaintenanceRecord m
                JOIN Machinery mc ON m.MachineryID = mc.MachineryID
                JOIN Staff s ON m.StaffID = s.StaffID""",
@@ -35,17 +35,17 @@ CATEGORIES = {
     "Purchase Orders": dict(
         sql="""SELECT p.OrderID AS ID, p.OrderDate AS Date,
                       sup.SupplierName AS Supplier,
-                      r.EngineerName AS 'Requested By',
-                      a.EngineerName AS 'Approved By',
+                      r.StaffName AS 'Requested By',
+                      a.StaffName AS 'Approved By',
                       p.ExpectedDeliveryDate AS Expected, p.Status
                FROM PurchaseOrder p
                JOIN Supplier sup ON p.SupplierID = sup.SupplierID
-               JOIN Staff r ON p.RequestBy = r.StaffID
+               JOIN Staff r ON p.RequestedBy = r.StaffID
                JOIN Staff a ON p.ApprovedBy = a.StaffID""",
-        date="p.OrderDate", mine="(p.RequestBy = ? OR p.ApprovedBy = ?)"),
+        date="p.OrderDate", mine="(p.RequestedBy = ? OR p.ApprovedBy = ?)"),
     "Deliveries": dict(
         sql="""SELECT d.DeliveryID AS ID, d.ReceivedDate AS Date,
-                      d.OrderID AS 'Order', s.EngineerName AS 'Received By',
+                      d.OrderID AS 'Order', s.StaffName AS 'Received By',
                       d.Remarks
                FROM Delivery d
                LEFT JOIN Staff s ON d.ReceivedBy = s.StaffID""",
@@ -69,19 +69,19 @@ CATEGORIES = {
                JOIN Machinery mc ON i.MachineryID = mc.MachineryID""",
         date="t.TestDate", mine=None),
     "Materials": dict(
-        sql="""SELECT m.MaterialID AS ID, m.MaterialDate AS Date,
+        sql="""SELECT m.MaterialID AS ID, m.StockInDate AS Date,
                       m.MaterialName AS Material, s.SupplierName AS Supplier,
                       m.Stock
                FROM Material m
                JOIN Supplier s ON m.SupplierID = s.SupplierID""",
-        date="m.MaterialDate", mine=None),
+        date="m.StockInDate", mine=None),
     "Material Compositions": dict(
-        sql="""SELECT mc.MaterialID AS ID, m.MaterialDate AS Date,
+        sql="""SELECT mc.MaterialID AS ID, m.StockInDate AS Date,
                       m.MaterialName AS Material, mc.ElementName AS Element,
                       mc.Percentage || '%' AS 'Percentage'
                FROM MaterialComposition mc
                JOIN Material m ON mc.MaterialID = m.MaterialID""",
-        date="m.MaterialDate", mine=None),
+        date="m.StockInDate", mine=None),
 }
 
 
@@ -100,17 +100,17 @@ def query(sql, params=()):
 
 
 def get_staff():
-    return query("SELECT StaffID, EngineerName, Role FROM Staff ORDER BY EngineerName")[1]
+    return query("SELECT StaffID, StaffName, Role FROM Staff ORDER BY StaffName")[1]
 
 
 def get_colleagues(staff_id):
     """SELF JOIN: other staff who share the same Role as staff_id."""
     return query(
-        """SELECT b.StaffID, b.EngineerName, b.Role
+        """SELECT b.StaffID, b.StaffName, b.Role
            FROM Staff a
            JOIN Staff b ON a.Role = b.Role AND a.StaffID <> b.StaffID
            WHERE a.StaffID = ?
-           ORDER BY b.EngineerName""", (staff_id,))[1]
+           ORDER BY b.StaffName""", (staff_id,))[1]
 
 
 def get_years():
@@ -122,7 +122,7 @@ def get_years():
             SELECT strftime('%Y', ReceivedDate) FROM Delivery UNION
             SELECT strftime('%Y', RecordDate) FROM Initial_check UNION
             SELECT strftime('%Y', TestDate) FROM InspectionTest UNION
-            SELECT strftime('%Y', MaterialDate) FROM Material
+            SELECT strftime('%Y', StockInDate) FROM Material
         ) WHERE y IS NOT NULL ORDER BY y"""
     return [r[0] for r in query(sql)[1]]
 

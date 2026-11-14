@@ -1,206 +1,92 @@
-CREATE TABLE Delivery (
-    DeliveryID INT PRIMARY KEY,
-    OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
-    ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
-    ReceivedDate DATE,
-    Remarks TEXT,
-    FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
-    FOREIGN KEY (ReceivedBy) REFERENCES Staff(StaffID)
+CREATE DATABASE IF NOT EXISTS constructiondb;
+USE constructiondb;
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS maintenancerecord, inspectiontest, initial_check, delivery,
+  purchaseordermaterial, purchaseordermachinery, purchaseorder, machinery,
+  materialcomposition, material, staff, supplier;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- =====================================================================
+-- Supplier
+-- =====================================================================
+CREATE TABLE Supplier(
+  SupplierID INT PRIMARY KEY,
+  SupplierName VARCHAR(100),
+  Phone VARCHAR(20),
+  Email VARCHAR(50),
+  Address VARCHAR(255)
 );
 
-INSERT INTO Delivery (DeliveryID, OrderID, ReceivedBy, ReceivedDate, Remarks)
+INSERT INTO Supplier (SupplierID, SupplierName, Phone, Email, Address) 
 VALUES
-(1, 1, 4, '2026-01-02', 'Delivered on schedule, no visible damage'),
-(2, 2, 5, '2026-01-05', 'Delivered on schedule'),
-(3, 3, 15, '2026-01-09', 'Delivered on schedule'),
-(4, 4, 16, '2026-01-12', 'Delivered on schedule'),
-(5, 5, 19, '2026-01-17', 'Delivered 1 day late'),
-(6, 6, 4, '2026-01-19', 'Delivered on schedule'),
-(7, 7, 5, '2026-01-23', 'Delivered on schedule'),
-(8, 8, 15, '2026-01-26', 'Delivered on schedule'),
-(9, 9, 16, '2026-01-05', 'Minor packaging damage, machine unaffected'),
-(10, 10, 19, '2026-01-08', 'Delivered on schedule'),
-(11, 11, 4, '2026-01-12', 'Delivered on schedule'),
-(12, 12, 5, '2026-01-15', 'Delivered on schedule'),
-(13, 13, 15, '2026-01-20', 'Delivered on schedule'),
-(14, 14, 16, '2026-01-22', 'Delivered on schedule'),
-(15, 15, 19, '2026-01-25', 'Delivered on schedule'),
-(16, 16, 4, '2026-01-27', 'Delivered on schedule'),
-(17, 17, 5, '2026-01-29', 'Delivered on schedule'),
-(18, 18, 15, '2026-02-01', 'Delivered on schedule'),
-(19, 19, 16, '2026-02-04', 'Delivered on schedule'),
-(20, 20, 19, '2026-02-06', 'Delivered on schedule'),
-(21, 21, 4, '2026-01-05', 'Delivered on schedule'),
-(22, 22, 5, '2026-01-08', 'Delivered on schedule'),
-(23, 23, 15, '2026-01-12', 'Delivered on schedule'),
-(24, 24, 16, '2026-01-15', 'Delivered on schedule'),
-(25, 25, 19, '2026-01-20', 'Delivered on schedule'),
-(26, 26, 4, '2026-01-25', 'Delivered on schedule'),
-(27, 27, 5, '2026-02-02', 'Delivered on schedule'),
-(28, 28, 15, '2026-02-06', 'Delivered on schedule'),
-(29, 29, 16, '2026-02-10', 'Delivered on schedule'),
-(30, 30, 19, '2026-02-14', 'Delivered on schedule'),
-(31, 31, 4, '2026-02-18', 'Delivered on schedule'),
-(32, 32, 5, '2026-02-22', 'Delivered on schedule'),
-(33, 33, 15, '2026-03-01', 'Delivered on schedule'),
-(34, 34, 16, '2026-03-05', 'Delivered on schedule'),
-(35, 35, 19, '2026-03-09', 'Delivered on schedule'),
-(36, 36, 4, '2026-03-13', 'Delivered on schedule'),
-(37, 37, 5, '2026-03-17', 'Delivered on schedule'),
-(38, 38, 15, '2026-03-21', 'Delivered on schedule'),
-(39, 39, 16, '2026-03-25', 'Delivered on schedule'),
-(40, 40, 19, '2026-03-29', 'Delivered on schedule');
+(1, 'BuildPro Construction Supplies', NULL, 'sales@buildpro.com', NULL),
+(2, 'Titan Heavy Equipment', '+60-12-345-6781', NULL, NULL),
+(3, 'Cemex Building Materials', NULL, 'contact@cemexbuild.com', NULL),
+(4, 'Apex Crane and Lifting Solutions', '+60-12-345-6782', NULL, NULL),
+(5, 'SteelCore Manufacturing', NULL, 'sales@steelcore.com', NULL),
+(6, 'Prime Earthmoving Equipment', '+60-12-345-6783', NULL, NULL),
+(7, 'RoadMaster Machinery', NULL, 'support@roadmaster.com', NULL),
+(8, 'HeavyHaul Transport Solutions', '+60-12-345-6784', NULL, NULL),
+(9, 'TerraBuild Machinery', NULL, 'info@terrabuild.com', NULL),
+(10, 'ConcreteTech Equipment', '+60-12-345-6785', NULL, NULL),
+(11, 'PowerLift Industrial Supplies', NULL, 'sales@powerlift.com', NULL),
+(12, 'AsphaltPro Construction Systems', '+60-12-345-6786', NULL, NULL),
+(13, 'GroundForce Engineering', NULL, 'contact@groundforce.com', NULL),
+(14, 'Compac Construction Equipment', '+60-12-345-6787', NULL, NULL),
+(15, 'SkyReach Crane Services', NULL, 'info@skyreach.com', NULL),
+(16, 'ReadyMix Concrete Solutions', '+60-12-345-6788', NULL, NULL),
+(17, 'FoundationWorks Engineering', NULL, 'sales@foundationworks.com', NULL),
+(18, 'SafeHeight Access Equipment', '+60-12-345-6789', NULL, NULL),
+(19, 'RockSolid Building Materials', NULL, 'contact@rocksolid.com', NULL),
+(20, 'DemolishPro Machinery', '+60-12-345-6790', NULL, NULL);
 
-CREATE TABLE Initial_check (
-    InitialCheckID INT PRIMARY KEY,
-    MachineryID INT NOT NULL,
-    RecordDate DATE,
-    FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
+-- =====================================================================
+-- Staff
+-- =====================================================================
+CREATE TABLE Staff(
+    StaffID INT PRIMARY KEY,
+    StaffName VARCHAR(100),
+    Role VARCHAR(25) NOT NULL
+        CHECK (Role IN ('Engineer', 'Technical Staff', 'Procurement Officer', 'Compliance Officer', 'Admin'))
 );
 
-INSERT INTO Initial_check (InitialCheckID, MachineryID, RecordDate) VALUES
-(1, 1, '2026-01-10'),
-(2, 2, '2026-01-12'),
-(3, 3, '2026-01-17'),
-(4, 4, '2026-01-19'),
-(5, 5, '2026-01-24'),
-(6, 6, '2026-01-26'),
-(7, 7, '2026-01-31'),
-(8, 8, '2026-02-02'),
-(9, 9, '2026-02-07'),
-(10, 10, '2026-02-09'),
-(11, 11, '2026-02-14'),
-(12, 12, '2026-02-16'),
-(13, 13, '2026-02-21'),
-(14, 14, '2026-02-23'),
-(15, 15, '2026-02-28'),
-(16, 16, '2026-03-02'),
-(17, 17, '2026-03-07'),
-(18, 18, '2026-03-09'),
-(19, 19, '2026-03-14'),
-(20, 20, '2026-03-16');
-
-CREATE TABLE InspectionTest (
-    TestID INT PRIMARY KEY,
-    InitialCheckID INT NOT NULL,
-    TestType VARCHAR(50) NOT NULL CHECK (TestType IN ('Stress Test', 'Quality Control', 'Laser Scan')),
-    TestDate DATE NOT NULL,
-    Description TEXT,
-    Passed BOOLEAN NOT NULL,
-    FOREIGN KEY (InitialCheckID) REFERENCES Initial_check(InitialCheckID) ON DELETE CASCADE
-);
-
-INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Description, Passed) VALUES
-(1, 1, 'Stress Test', '2026-01-05', 'Load test at 120% rated capacity - no deformation', 1),
-(2, 2, 'Stress Test', '2026-01-07', 'Vibration endurance test 48 hours - passed', 1),
-(3, 3, 'Stress Test', '2026-01-12', 'Thermal cycling -10C to 80C - hairline crack at weld', 0),
-(4, 4, 'Stress Test', '2026-01-14', 'Static load test on main frame - passed', 1),
-(5, 5, 'Stress Test', '2026-01-19', 'Fatigue test 10,000 cycles - passed', 1),
-(6, 6, 'Stress Test', '2026-01-21', 'Torsion test on drive shaft - deformation above limit', 0),
-(7, 7, 'Stress Test', '2026-01-26', 'Overload test at 150% - passed with minor flex', 1),
-(8, 8, 'Stress Test', '2026-01-28', 'Hydraulic pressure test at 200 bar - passed', 1),
-(9, 9, 'Stress Test', '2026-02-02', 'Impact resistance test on housing - passed', 1),
-(10, 10, 'Stress Test', '2026-02-04', 'Vibration endurance test 48 hours - bearing overheating', 0),
-(11, 11, 'Stress Test', '2026-02-09', 'Load test at 120% rated capacity - passed', 1),
-(12, 12, 'Stress Test', '2026-02-11', 'Static load test on boom arm - passed', 1),
-(13, 13, 'Stress Test', '2026-02-16', 'Fatigue test 10,000 cycles - passed', 1),
-(14, 14, 'Stress Test', '2026-02-18', 'Thermal cycling -10C to 80C - seal leakage detected', 0),
-(15, 15, 'Stress Test', '2026-02-23', 'Hydraulic pressure test at 200 bar - passed', 1),
-(16, 16, 'Stress Test', '2026-02-25', 'Overload test at 150% - passed', 1),
-(17, 17, 'Stress Test', '2026-03-02', 'Impact resistance test on housing - passed', 1),
-(18, 18, 'Stress Test', '2026-03-04', 'Torsion test on drive shaft - shaft cracked', 0),
-(19, 19, 'Stress Test', '2026-03-09', 'Static load test on main frame - passed', 1),
-(20, 20, 'Stress Test', '2026-03-11', 'Vibration endurance test 48 hours - passed', 1),
-(21, 1, 'Quality Control', '2026-01-07', 'Surface finish and paint inspection - meets standard', 1),
-(22, 2, 'Quality Control', '2026-01-09', 'Dimension tolerance check +/-0.1 mm - passed', 1),
-(23, 3, 'Quality Control', '2026-01-14', 'Weld seam visual inspection - passed', 1),
-(24, 4, 'Quality Control', '2026-01-16', 'Component labelling and serial number check - passed', 1),
-(25, 5, 'Quality Control', '2026-01-21', 'Electrical wiring and insulation check - passed', 1),
-(26, 6, 'Quality Control', '2026-01-23', 'Surface finish inspection - paint peeling found', 0),
-(27, 7, 'Quality Control', '2026-01-28', 'Dimension tolerance check +/-0.1 mm - passed', 1),
-(28, 8, 'Quality Control', '2026-01-30', 'Fastener torque check - passed', 1),
-(29, 9, 'Quality Control', '2026-02-04', 'Weld seam visual inspection - passed', 1),
-(30, 10, 'Quality Control', '2026-02-06', 'Lubrication system check - passed', 1),
-(31, 11, 'Quality Control', '2026-02-11', 'Electrical wiring check - loose terminal found', 0),
-(32, 12, 'Quality Control', '2026-02-13', 'Surface finish and paint inspection - meets standard', 1),
-(33, 13, 'Quality Control', '2026-02-18', 'Fastener torque check - passed', 1),
-(34, 14, 'Quality Control', '2026-02-20', 'Dimension tolerance check +/-0.1 mm - passed', 1),
-(35, 15, 'Quality Control', '2026-02-25', 'Safety guard and emergency stop check - passed', 1),
-(36, 16, 'Quality Control', '2026-02-27', 'Lubrication system check - passed', 1),
-(37, 17, 'Quality Control', '2026-03-04', 'Weld seam visual inspection - porosity found', 0),
-(38, 18, 'Quality Control', '2026-03-06', 'Component labelling and serial number check - passed', 1),
-(39, 19, 'Quality Control', '2026-03-11', 'Safety guard and emergency stop check - passed', 1),
-(40, 20, 'Quality Control', '2026-03-13', 'Electrical wiring and insulation check - passed', 1),
-(41, 1, 'Laser Scan', '2026-01-09', '3D laser scan of chassis - within tolerance', 1),
-(42, 2, 'Laser Scan', '2026-01-11', 'Laser alignment scan of drive shaft - aligned', 1),
-(43, 3, 'Laser Scan', '2026-01-16', '3D laser scan of frame - warping of 1.2 mm detected', 0),
-(44, 4, 'Laser Scan', '2026-01-18', '3D laser scan of chassis - within tolerance', 1),
-(45, 5, 'Laser Scan', '2026-01-23', 'Laser alignment scan of rollers - aligned', 1),
-(46, 6, 'Laser Scan', '2026-01-25', 'Surface flatness scan of base plate - within tolerance', 1),
-(47, 7, 'Laser Scan', '2026-01-30', '3D laser scan of housing - within tolerance', 1),
-(48, 8, 'Laser Scan', '2026-02-01', 'Laser alignment scan of drive shaft - aligned', 1),
-(49, 9, 'Laser Scan', '2026-02-06', 'Surface flatness scan of base plate - within tolerance', 1),
-(50, 10, 'Laser Scan', '2026-02-08', '3D laser scan of frame - dent of 2 mm detected', 0),
-(51, 11, 'Laser Scan', '2026-02-13', '3D laser scan of chassis - within tolerance', 1),
-(52, 12, 'Laser Scan', '2026-02-15', 'Laser alignment scan of rollers - aligned', 1),
-(53, 13, 'Laser Scan', '2026-02-20', 'Surface flatness scan of base plate - within tolerance', 1),
-(54, 14, 'Laser Scan', '2026-02-22', '3D laser scan of housing - within tolerance', 1),
-(55, 15, 'Laser Scan', '2026-02-27', 'Laser alignment scan of drive shaft - misaligned by 0.8 mm', 0),
-(56, 16, 'Laser Scan', '2026-03-01', '3D laser scan of chassis - within tolerance', 1),
-(57, 17, 'Laser Scan', '2026-03-06', 'Surface flatness scan of base plate - within tolerance', 1),
-(58, 18, 'Laser Scan', '2026-03-08', '3D laser scan of frame - within tolerance', 1),
-(59, 19, 'Laser Scan', '2026-03-13', 'Laser alignment scan of rollers - aligned', 1),
-(60, 20, 'Laser Scan', '2026-03-15', '3D laser scan of housing - within tolerance', 1);
-
-CREATE TABLE IF NOT EXISTS MaintenanceRecord(
-    RecordID INT PRIMARY KEY,
-    StaffID INT, -- foreign key to Staff table
-    MachineryID INT, -- foreign key to Machinery table
-    RecordType VARCHAR(50), -- type of maintenance performed
-    CreatedDate DATE,
-    PhotoPath VARCHAR(255),
-    DamagePercentage DECIMAL(5,2) CHECK (DamagePercentage >= 0 AND DamagePercentage <= 100), -- record dmg percentage of machinery
-    PreviousRecordID INT,
-    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-    FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID),
-    FOREIGN KEY (PreviousRecordID) REFERENCES MaintenanceRecord(RecordID)
-);
-
-INSERT INTO MaintenanceRecord (RecordID, StaffID, MachineryID, RecordType, CreatedDate, PhotoPath, DamagePercentage, PreviousRecordID)
+INSERT INTO Staff (StaffID, StaffName, Role) 
 VALUES
-    (1,  1, 1, 'Routine Inspection',  '2026-01-20', 'photos/maintenance/rec_01.jpg',  0.00, NULL),
-    (2,  2, 2, 'Lubrication',         '2026-01-22', 'photos/maintenance/rec_02.jpg',  5.50, NULL),
-    (3,  3, 3, 'Component Repair',    '2026-01-27', 'photos/maintenance/rec_03.jpg', 25.00, NULL),
-    (4,  4, 4, 'Safety Check',        '2026-01-29', 'photos/maintenance/rec_04.jpg',  2.00, NULL),
-    (5,  5, 5, 'Motor Replacement',   '2026-01-31', 'photos/maintenance/rec_05.jpg', 65.00, NULL),
-    (6,  1, 2, 'Routine Inspection',  '2026-02-02', 'photos/maintenance/rec_06.jpg',  0.00, 2),
-    (7,  2, 3, 'Belt Replacement',    '2026-02-05', 'photos/maintenance/rec_07.jpg', 18.50, 3),
-    (8,  3, 4, 'Electrical Repair',   '2026-02-10', 'photos/maintenance/rec_08.jpg', 35.00, 4),
-    (9,  4, 5, 'Lubrication',         '2026-02-14', 'photos/maintenance/rec_09.jpg',  4.00, 5),
-    (10, 5, 1, 'Hydraulic Repair',    '2026-02-18', 'photos/maintenance/rec_10.jpg', 42.75, 1),
-    (11, 1, 3, 'Safety Check',        '2026-03-01', 'photos/maintenance/rec_11.jpg',  1.50, 7),
-    (12, 2, 4, 'Component Repair',    '2026-03-05', 'photos/maintenance/rec_12.jpg', 28.00, 8),
-    (13, 3, 5, 'Routine Inspection',  '2026-03-09', 'photos/maintenance/rec_13.jpg',  0.00, 9),
-    (14, 4, 1, 'Bearing Replacement', '2026-03-13', 'photos/maintenance/rec_14.jpg', 55.25, 10),
-    (15, 5, 2, 'Electrical Repair',   '2026-03-18', 'photos/maintenance/rec_15.jpg', 32.00, 6),
-    (16, 1, 4, 'Lubrication',         '2026-04-02', 'photos/maintenance/rec_16.jpg',  3.50, 12),
-    (17, 2, 5, 'Motor Replacement',   '2026-04-07', 'photos/maintenance/rec_17.jpg', 78.00, 13),
-    (18, 3, 1, 'Safety Check',        '2026-04-12', 'photos/maintenance/rec_18.jpg',  0.50, 14),
-    (19, 4, 2, 'Hydraulic Repair',    '2026-04-17', 'photos/maintenance/rec_19.jpg', 46.00, 15),
-    (20, 5, 3, 'Routine Inspection',  '2026-04-22', 'photos/maintenance/rec_20.jpg',  0.00, 11),
-    (21, 4, 7,  'Hydraulic Repair', '2026-03-10', 'photos/maintenance/rec_21.jpg', 38.00, NULL),
-    (22, 5, 11, 'Safety Check',     '2026-03-12', 'photos/maintenance/rec_22.jpg', 22.50, NULL);
-    
+(1, 'John Smith', 'Engineer'),
+(2, 'Emily Johnson', 'Engineer'),
+(3, 'Michael Brown', 'Engineer'),
+(4, 'Sarah Davis', 'Technical Staff'),
+(5, 'David Wilson', 'Technical Staff'),
+(6, 'Jessica Martinez', 'Procurement Officer'),
+(7, 'Daniel Anderson', 'Procurement Officer'),
+(8, 'Olivia Thomas', 'Procurement Officer'),
+(9, 'James Taylor', 'Compliance Officer'),
+(10, 'Sophia Moore', 'Compliance Officer'),
+(11, 'Liam Jackson', 'Admin'),
+(12, 'William Jackson', 'Admin'),
+(13, 'Ava White', 'Engineer'),
+(14, 'Alexander Harris', 'Engineer'),
+(15, 'Mia Clark', 'Technical Staff'),
+(16, 'Benjamin Lewis', 'Technical Staff'),
+(17, 'Charlotte Robinson', 'Procurement Officer'),
+(18, 'Ethan Walker', 'Compliance Officer'),
+(19, 'Amelia Hall', 'Technical Staff'),
+(20, 'Lucas Allen', 'Admin');
+
+-- =====================================================================
+-- Material
+-- =====================================================================
 CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
   MaterialName VARCHAR(100) NOT NULL,
-  MaterialDate DATE,
+  StockInDate DATE,
   Stock INT CHECK (Stock >= 0),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
 
-INSERT INTO Material (MaterialID, SupplierID, MaterialName, MaterialDate, Stock)
+INSERT INTO Material (MaterialID, SupplierID, MaterialName, StockInDate, Stock)
 VALUES
 (1,  1, 'Portland Cement',           '2026-01-05', 500),
 (2,  2, 'Portland Cement',           '2026-01-08', 350),
@@ -223,6 +109,9 @@ VALUES
 (19, 4, 'Crushed Granite Aggregate', '2026-03-25', 275),
 (20, 5, 'Steel Rebar',               '2026-03-29', 610);
 
+-- =====================================================================
+-- MaterialComposition
+-- =====================================================================
 CREATE TABLE MaterialComposition (
     MaterialID INT NOT NULL,
     ElementName VARCHAR(50) NOT NULL,
@@ -299,43 +188,16 @@ INSERT INTO MaterialComposition (MaterialID, ElementName, Percentage) VALUES
 (20, 'Manganese', 1.20),
 (20, 'Other', 0.50);
 
-
-CREATE TABLE Supplier(
-  SupplierID INT PRIMARY KEY,
-  SupplierName VARCHAR(100),
-  ContactDetails VARCHAR(100)
-  );
-  
-INSERT INTO Supplier (SupplierID, SupplierName, ContactDetails) 
-VALUES
-(1, 'BuildPro Construction Supplies', 'sales@buildpro.com'),
-(2, 'Titan Heavy Equipment', '+60-12-345-6781'),
-(3, 'Cemex Building Materials', 'contact@cemexbuild.com'),
-(4, 'Apex Crane and Lifting Solutions', '+60-12-345-6782'),
-(5, 'SteelCore Manufacturing', 'sales@steelcore.com'),
-(6, 'Prime Earthmoving Equipment', '+60-12-345-6783'),
-(7, 'RoadMaster Machinery', 'support@roadmaster.com'),
-(8, 'HeavyHaul Transport Solutions', '+60-12-345-6784'),
-(9, 'TerraBuild Machinery', 'info@terrabuild.com'),
-(10, 'ConcreteTech Equipment', '+60-12-345-6785'),
-(11, 'PowerLift Industrial Supplies', 'sales@powerlift.com'),
-(12, 'AsphaltPro Construction Systems', '+60-12-345-6786'),
-(13, 'GroundForce Engineering', 'contact@groundforce.com'),
-(14, 'Compac Construction Equipment', '+60-12-345-6787'),
-(15, 'SkyReach Crane Services', 'info@skyreach.com'),
-(16, 'ReadyMix Concrete Solutions', '+60-12-345-6788'),
-(17, 'FoundationWorks Engineering', 'sales@foundationworks.com'),
-(18, 'SafeHeight Access Equipment', '+60-12-345-6789'),
-(19, 'RockSolid Building Materials', 'contact@rocksolid.com'),
-(20, 'DemolishPro Machinery', '+60-12-345-6790');
-
+-- =====================================================================
+-- Machinery
+-- =====================================================================
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
   MachineryName VARCHAR(100),
   Description VARCHAR(255),
   PhotoPath VARCHAR(255),
-  Status VARCHAR(50) NOT NULL DEFAULT 'Available'
+  Status VARCHAR(25) NOT NULL DEFAULT 'Available'
     CHECK (Status IN ('Available', 'In Use', 'Under Maintenance', 'Out of Service')),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
@@ -364,52 +226,25 @@ VALUES
 (19, 19, 'Trench Compactor', 'Specialized equipment used for compacting soil inside narrow trenches and confined spaces', NULL, 'Available'),
 (20, 20, 'Demolition Excavator', 'Specialized excavator equipped with attachments for demolishing concrete structures and buildings', NULL, 'Available');
 
-CREATE TABLE IF NOT EXISTS Staff(
-    StaffID INT PRIMARY KEY,
-    EngineerName VARCHAR(100),
-    Role VARCHAR(50) NOT NULL
-        CHECK (Role IN ('Engineer', 'Technical Staff', 'Procurement Officer', 'Compliance Officer', 'Admin'))
-);
-
-INSERT INTO Staff (StaffID, EngineerName, Role) 
-VALUES
-(1, 'John Smith', 'Engineer'),
-(2, 'Emily Johnson', 'Engineer'),
-(3, 'Michael Brown', 'Engineer'),
-(4, 'Sarah Davis', 'Technical Staff'),
-(5, 'David Wilson', 'Technical Staff'),
-(6, 'Jessica Martinez', 'Procurement Officer'),
-(7, 'Daniel Anderson', 'Procurement Officer'),
-(8, 'Olivia Thomas', 'Procurement Officer'),
-(9, 'James Taylor', 'Compliance Officer'),
-(10, 'Sophia Moore', 'Compliance Officer'),
-(11, 'Liam Jackson', 'Admin'),
-(12, 'William Jackson', 'Admin'),
-(13, 'Ava White', 'Engineer'),
-(14, 'Alexander Harris', 'Engineer'),
-(15, 'Mia Clark', 'Technical Staff'),
-(16, 'Benjamin Lewis', 'Technical Staff'),
-(17, 'Charlotte Robinson', 'Procurement Officer'),
-(18, 'Ethan Walker', 'Compliance Officer'),
-(19, 'Amelia Hall', 'Technical Staff'),
-(20, 'Lucas Allen', 'Admin');
-
+-- =====================================================================
+-- PurchaseOrder
+-- =====================================================================
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
-    RequestBy INT, -- Foreign key referencing StaffID in Staff table
+    RequestedBy INT, -- Foreign key referencing StaffID in Staff table
     ApprovedBy INT, -- Foreign key referencing StaffID in Staff table
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
     Status VARCHAR(25),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
-    FOREIGN KEY (RequestBy) REFERENCES Staff(StaffID),
+    FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
-    CHECK (ApprovedBy <> RequestBy)
+    CHECK (ApprovedBy <> RequestedBy)
 );
 
 INSERT INTO PurchaseOrder
-(OrderID, SupplierID, RequestBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
+(OrderID, SupplierID, RequestedBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
 VALUES
 -- Machinery purchase orders (1–20)
 (1,  1,  6, 11, '2025-12-15', '2026-01-02', 'Delivered'),
@@ -459,38 +294,45 @@ VALUES
 (41,  3,  6, NULL, '2026-04-06', '2026-04-14', 'Pending'),
 (42,  5,  7, NULL, '2026-04-10', '2026-04-18', 'Pending');
 
+-- =====================================================================
+-- PurchaseOrderMachinery
+-- =====================================================================
 CREATE TABLE PurchaseOrderMachinery (
     OrderID INT,
     MachineryID INT,
     UnitPrice DECIMAL(10, 2) NOT NULL CHECK (UnitPrice >= 0),
+    Quantity INT NOT NULL DEFAULT 1 CHECK (Quantity > 0),
     PRIMARY KEY (OrderID, MachineryID),
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
 );
 
-INSERT INTO PurchaseOrderMachinery (OrderID, MachineryID, UnitPrice) 
+INSERT INTO PurchaseOrderMachinery (OrderID, MachineryID, UnitPrice, Quantity)
 VALUES
-(1, 1, 48500.00),
-(2, 2, 125000.00),
-(3, 3, 89000.00),
-(4, 4, 76500.00),
-(5, 5, 112000.00),
-(6, 6, 18900.00),
-(7, 9, 9800.00),
-(8, 10, 14500.00),
-(9, 3, 89500.00),
-(10, 2, 125000.00),
-(11, 5, 112000.00),
-(12, 6, 18900.00),
-(13, 7, 54000.00),
-(14, 8, 38500.00),
-(15, 9, 9800.00),
-(16, 1, 48500.00),
-(17, 2, 128000.00),
-(18, 3, 90000.00),
-(19, 4, 77000.00),
-(20, 5, 115000.00);
+(1,  1, 48500.00, 1),
+(2,  2, 125000.00, 1),
+(3,  3, 89000.00, 1),
+(4,  4, 76500.00, 1),
+(5,  5, 112000.00, 1),
+(6,  6, 18900.00, 1),
+(7,  7, 54000.00, 1),
+(8,  8, 38500.00, 1),
+(9,  9, 9800.00, 1),
+(10, 10, 14500.00, 1),
+(11, 11, 18900.00, 1),
+(12, 12, 250000.00, 1),
+(13, 13, 180000.00, 1),
+(14, 14, 5400.00, 1),
+(15, 15, 540000.00, 1),
+(16, 16, 385000.00, 1),
+(17, 17, 128000.00, 1),
+(18, 18, 38500.00, 1),
+(19, 19, 9800.00, 1),
+(20, 20, 125000.00, 1);
 
+-- =====================================================================
+-- PurchaseOrderMaterial
+-- =====================================================================
 CREATE TABLE PurchaseOrderMaterial (
     OrderID INT,
     MaterialID INT,
@@ -526,3 +368,207 @@ VALUES
 (41, 3, 300, 9.80),
 (41, 8, 200, 31.00),
 (42, 5, 250, 6.20);
+
+-- =====================================================================
+-- Delivery
+-- =====================================================================
+CREATE TABLE Delivery (
+    DeliveryID INT PRIMARY KEY,
+    OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
+    ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
+    ReceivedDate DATE,
+    Remarks VARCHAR(255),
+    FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
+    FOREIGN KEY (ReceivedBy) REFERENCES Staff(StaffID)
+);
+
+INSERT INTO Delivery (DeliveryID, OrderID, ReceivedBy, ReceivedDate, Remarks)
+VALUES
+(1, 1, 4, '2026-01-02', 'Delivered on schedule, no visible damage'),
+(2, 2, 5, '2026-01-05', 'Delivered on schedule'),
+(3, 3, 15, '2026-01-09', 'Delivered on schedule'),
+(4, 4, 16, '2026-01-12', 'Delivered on schedule'),
+(5, 5, 19, '2026-01-17', 'Delivered 1 day late'),
+(6, 6, 4, '2026-01-19', 'Delivered on schedule'),
+(7, 7, 5, '2026-01-23', 'Delivered on schedule'),
+(8, 8, 15, '2026-01-26', 'Delivered on schedule'),
+(9, 9, 16, '2026-01-05', 'Minor packaging damage, machine unaffected'),
+(10, 10, 19, '2026-01-08', 'Delivered on schedule'),
+(11, 11, 4, '2026-01-12', 'Delivered on schedule'),
+(12, 12, 5, '2026-01-15', 'Delivered on schedule'),
+(13, 13, 15, '2026-01-20', 'Delivered on schedule'),
+(14, 14, 16, '2026-01-22', 'Delivered on schedule'),
+(15, 15, 19, '2026-01-25', 'Delivered on schedule'),
+(16, 16, 4, '2026-01-27', 'Delivered on schedule'),
+(17, 17, 5, '2026-01-29', 'Delivered on schedule'),
+(18, 18, 15, '2026-02-01', 'Delivered on schedule'),
+(19, 19, 16, '2026-02-04', 'Delivered on schedule'),
+(20, 20, 19, '2026-02-06', 'Delivered on schedule'),
+(21, 21, 4, '2026-01-05', 'Delivered on schedule'),
+(22, 22, 5, '2026-01-08', 'Delivered on schedule'),
+(23, 23, 15, '2026-01-12', 'Delivered on schedule'),
+(24, 24, 16, '2026-01-15', 'Delivered on schedule'),
+(25, 25, 19, '2026-01-20', 'Delivered on schedule'),
+(26, 26, 4, '2026-01-25', 'Delivered on schedule'),
+(27, 27, 5, '2026-02-02', 'Delivered on schedule'),
+(28, 28, 15, '2026-02-06', 'Delivered on schedule'),
+(29, 29, 16, '2026-02-10', 'Delivered on schedule'),
+(30, 30, 19, '2026-02-14', 'Delivered on schedule'),
+(31, 31, 4, '2026-02-18', 'Delivered on schedule'),
+(32, 32, 5, '2026-02-22', 'Delivered on schedule'),
+(33, 33, 15, '2026-03-01', 'Delivered on schedule'),
+(34, 34, 16, '2026-03-05', 'Delivered on schedule'),
+(35, 35, 19, '2026-03-09', 'Delivered on schedule'),
+(36, 36, 4, '2026-03-13', 'Delivered on schedule'),
+(37, 37, 5, '2026-03-17', 'Delivered on schedule'),
+(38, 38, 15, '2026-03-21', 'Delivered on schedule'),
+(39, 39, 16, '2026-03-25', 'Delivered on schedule'),
+(40, 40, 19, '2026-03-29', 'Delivered on schedule');
+
+-- =====================================================================
+-- Initial_check
+-- =====================================================================
+CREATE TABLE Initial_check (
+    InitialCheckID INT PRIMARY KEY,
+    MachineryID INT NOT NULL UNIQUE,
+    RecordDate DATE,
+    FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID)
+);
+
+INSERT INTO Initial_check (InitialCheckID, MachineryID, RecordDate) VALUES
+(1, 1, '2026-01-10'),
+(2, 2, '2026-01-12'),
+(3, 3, '2026-01-17'),
+(4, 4, '2026-01-19'),
+(5, 5, '2026-01-24'),
+(6, 6, '2026-01-26'),
+(7, 7, '2026-01-31'),
+(8, 8, '2026-02-02'),
+(9, 9, '2026-02-07'),
+(10, 10, '2026-02-09'),
+(11, 11, '2026-02-14'),
+(12, 12, '2026-02-16'),
+(13, 13, '2026-02-21'),
+(14, 14, '2026-02-23'),
+(15, 15, '2026-02-28'),
+(16, 16, '2026-03-02'),
+(17, 17, '2026-03-07'),
+(18, 18, '2026-03-09'),
+(19, 19, '2026-03-14'),
+(20, 20, '2026-03-16');
+
+-- =====================================================================
+-- InspectionTest
+-- =====================================================================
+CREATE TABLE InspectionTest (
+    TestID INT PRIMARY KEY,
+    InitialCheckID INT NOT NULL,
+    TestType VARCHAR(50) NOT NULL CHECK (TestType IN ('Stress Test', 'Quality Control', 'Laser Scan')),
+    TestDate DATE NOT NULL,
+    Description TEXT,
+    Passed BOOLEAN NOT NULL,
+    FOREIGN KEY (InitialCheckID) REFERENCES Initial_check(InitialCheckID) ON DELETE CASCADE
+);
+
+INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Description, Passed) VALUES
+(1, 1, 'Stress Test', '2026-01-05', 'Load test at 120% rated capacity - no deformation', 1),
+(2, 2, 'Stress Test', '2026-01-07', 'Vibration endurance test 48 hours - passed', 1),
+(3, 3, 'Stress Test', '2026-01-12', 'Thermal cycling -10C to 80C - hairline crack at weld', 0),
+(4, 4, 'Stress Test', '2026-01-14', 'Static load test on main frame - passed', 1),
+(5, 5, 'Stress Test', '2026-01-19', 'Fatigue test 10,000 cycles - passed', 1),
+(6, 6, 'Stress Test', '2026-01-21', 'Torsion test on drive shaft - deformation above limit', 0),
+(7, 7, 'Stress Test', '2026-01-26', 'Overload test at 150% - passed with minor flex', 1),
+(8, 8, 'Stress Test', '2026-01-28', 'Hydraulic pressure test at 200 bar - passed', 1),
+(9, 9, 'Stress Test', '2026-02-02', 'Impact resistance test on housing - passed', 1),
+(10, 10, 'Stress Test', '2026-02-04', 'Vibration endurance test 48 hours - bearing overheating', 0),
+(11, 11, 'Stress Test', '2026-02-09', 'Load test at 120% rated capacity - passed', 1),
+(12, 12, 'Stress Test', '2026-02-11', 'Static load test on boom arm - passed', 1),
+(13, 13, 'Stress Test', '2026-02-16', 'Fatigue test 10,000 cycles - passed', 1),
+(14, 14, 'Stress Test', '2026-02-18', 'Thermal cycling -10C to 80C - seal leakage detected', 0),
+(15, 15, 'Stress Test', '2026-02-23', 'Hydraulic pressure test at 200 bar - passed', 1),
+(16, 16, 'Stress Test', '2026-02-25', 'Overload test at 150% - passed', 1),
+(17, 17, 'Stress Test', '2026-03-02', 'Impact resistance test on housing - passed', 1),
+(18, 18, 'Stress Test', '2026-03-04', 'Torsion test on drive shaft - shaft cracked', 0),
+(19, 19, 'Stress Test', '2026-03-09', 'Static load test on main frame - passed', 1),
+(20, 20, 'Stress Test', '2026-03-11', 'Vibration endurance test 48 hours - passed', 1),
+(21, 1, 'Quality Control', '2026-01-07', 'Surface finish and paint inspection - meets standard', 1),
+(22, 2, 'Quality Control', '2026-01-09', 'Dimension tolerance check +/-0.1 mm - passed', 1),
+(23, 3, 'Quality Control', '2026-01-14', 'Weld seam visual inspection - passed', 1),
+(24, 4, 'Quality Control', '2026-01-16', 'Component labelling and serial number check - passed', 1),
+(25, 5, 'Quality Control', '2026-01-21', 'Electrical wiring and insulation check - passed', 1),
+(26, 6, 'Quality Control', '2026-01-23', 'Surface finish inspection - paint peeling found', 0),
+(27, 7, 'Quality Control', '2026-01-28', 'Dimension tolerance check +/-0.1 mm - passed', 1),
+(28, 8, 'Quality Control', '2026-01-30', 'Fastener torque check - passed', 1),
+(29, 9, 'Quality Control', '2026-02-04', 'Weld seam visual inspection - passed', 1),
+(30, 10, 'Quality Control', '2026-02-06', 'Lubrication system check - passed', 1),
+(31, 11, 'Quality Control', '2026-02-11', 'Electrical wiring check - loose terminal found', 0),
+(32, 12, 'Quality Control', '2026-02-13', 'Surface finish and paint inspection - meets standard', 1),
+(33, 13, 'Quality Control', '2026-02-18', 'Fastener torque check - passed', 1),
+(34, 14, 'Quality Control', '2026-02-20', 'Dimension tolerance check +/-0.1 mm - passed', 1),
+(35, 15, 'Quality Control', '2026-02-25', 'Safety guard and emergency stop check - passed', 1),
+(36, 16, 'Quality Control', '2026-02-27', 'Lubrication system check - passed', 1),
+(37, 17, 'Quality Control', '2026-03-04', 'Weld seam visual inspection - porosity found', 0),
+(38, 18, 'Quality Control', '2026-03-06', 'Component labelling and serial number check - passed', 1),
+(39, 19, 'Quality Control', '2026-03-11', 'Safety guard and emergency stop check - passed', 1),
+(40, 20, 'Quality Control', '2026-03-13', 'Electrical wiring and insulation check - passed', 1),
+(41, 1, 'Laser Scan', '2026-01-09', '3D laser scan of chassis - within tolerance', 1),
+(42, 2, 'Laser Scan', '2026-01-11', 'Laser alignment scan of drive shaft - aligned', 1),
+(43, 3, 'Laser Scan', '2026-01-16', '3D laser scan of frame - warping of 1.2 mm detected', 0),
+(44, 4, 'Laser Scan', '2026-01-18', '3D laser scan of chassis - within tolerance', 1),
+(45, 5, 'Laser Scan', '2026-01-23', 'Laser alignment scan of rollers - aligned', 1),
+(46, 6, 'Laser Scan', '2026-01-25', 'Surface flatness scan of base plate - within tolerance', 1),
+(47, 7, 'Laser Scan', '2026-01-30', '3D laser scan of housing - within tolerance', 1),
+(48, 8, 'Laser Scan', '2026-02-01', 'Laser alignment scan of drive shaft - aligned', 1),
+(49, 9, 'Laser Scan', '2026-02-06', 'Surface flatness scan of base plate - within tolerance', 1),
+(50, 10, 'Laser Scan', '2026-02-08', '3D laser scan of frame - dent of 2 mm detected', 0),
+(51, 11, 'Laser Scan', '2026-02-13', '3D laser scan of chassis - within tolerance', 1),
+(52, 12, 'Laser Scan', '2026-02-15', 'Laser alignment scan of rollers - aligned', 1),
+(53, 13, 'Laser Scan', '2026-02-20', 'Surface flatness scan of base plate - within tolerance', 1),
+(54, 14, 'Laser Scan', '2026-02-22', '3D laser scan of housing - within tolerance', 1),
+(55, 15, 'Laser Scan', '2026-02-27', 'Laser alignment scan of drive shaft - misaligned by 0.8 mm', 0),
+(56, 16, 'Laser Scan', '2026-03-01', '3D laser scan of chassis - within tolerance', 1),
+(57, 17, 'Laser Scan', '2026-03-06', 'Surface flatness scan of base plate - within tolerance', 1),
+(58, 18, 'Laser Scan', '2026-03-08', '3D laser scan of frame - within tolerance', 1),
+(59, 19, 'Laser Scan', '2026-03-13', 'Laser alignment scan of rollers - aligned', 1),
+(60, 20, 'Laser Scan', '2026-03-15', '3D laser scan of housing - within tolerance', 1);
+
+-- =====================================================================
+-- MaintenanceRecord
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS MaintenanceRecord(
+    RecordID INT PRIMARY KEY,
+    StaffID INT, -- foreign key to Staff table
+    MachineryID INT, -- foreign key to Machinery table
+    RecordType VARCHAR(50), -- type of maintenance performed
+    CreatedDate DATE,
+    DamagePercentage DECIMAL(5,2) CHECK (DamagePercentage >= 0 AND DamagePercentage <= 100), -- record dmg percentage of machinery
+    PreviousRecordID INT,
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+    FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID),
+    FOREIGN KEY (PreviousRecordID) REFERENCES MaintenanceRecord(RecordID)
+);
+
+INSERT INTO MaintenanceRecord (RecordID, StaffID, MachineryID, RecordType, CreatedDate, DamagePercentage, PreviousRecordID)
+VALUES
+    (1,  1, 1, 'Routine Inspection',  '2026-01-20',  0.00, NULL),
+    (2,  2, 2, 'Lubrication',         '2026-01-22',  5.50, NULL),
+    (3,  3, 3, 'Component Repair',    '2026-01-27', 25.00, NULL),
+    (4,  4, 4, 'Safety Check',        '2026-01-29',  2.00, NULL),
+    (5,  5, 5, 'Motor Replacement',   '2026-01-31', 65.00, NULL),
+    (6,  1, 2, 'Routine Inspection',  '2026-02-02',  0.00, 2),
+    (7,  2, 3, 'Belt Replacement',    '2026-02-05', 18.50, 3),
+    (8,  3, 4, 'Electrical Repair',   '2026-02-10', 35.00, 4),
+    (9,  4, 5, 'Lubrication',         '2026-02-14',  4.00, 5),
+    (10, 5, 1, 'Hydraulic Repair',    '2026-02-18', 42.75, 1),
+    (11, 1, 3, 'Safety Check',        '2026-03-01',  1.50, 7),
+    (12, 2, 4, 'Component Repair',    '2026-03-05', 28.00, 8),
+    (13, 3, 5, 'Routine Inspection',  '2026-03-09',  0.00, 9),
+    (14, 4, 1, 'Bearing Replacement', '2026-03-13', 55.25, 10),
+    (15, 5, 2, 'Electrical Repair',   '2026-03-18', 32.00, 6),
+    (16, 1, 4, 'Lubrication',         '2026-04-02',  3.50, 12),
+    (17, 2, 5, 'Motor Replacement',   '2026-04-07', 78.00, 13),
+    (18, 3, 1, 'Safety Check',        '2026-04-12',  0.50, 14),
+    (19, 4, 2, 'Hydraulic Repair',    '2026-04-17', 46.00, 15),
+    (20, 5, 3, 'Routine Inspection',  '2026-04-22',  0.00, 11),
+    (21, 4, 7,  'Hydraulic Repair',   '2026-03-10', 38.00, NULL),
+    (22, 5, 11, 'Safety Check',       '2026-03-12', 22.50, NULL);

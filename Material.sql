@@ -2,12 +2,12 @@ CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
   MaterialName VARCHAR(100) NOT NULL,
-  MaterialDate DATE,
+  StockInDate DATE,
   Stock INT CHECK (Stock >= 0),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
 
-INSERT INTO Material (MaterialID, SupplierID, MaterialName, MaterialDate, Stock)
+INSERT INTO Material (MaterialID, SupplierID, MaterialName, StockInDate, Stock)
 VALUES
 (1,  1, 'Portland Cement',           '2026-01-05', 500),
 (2,  2, 'Portland Cement',           '2026-01-08', 350),
