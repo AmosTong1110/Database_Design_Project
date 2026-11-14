@@ -5,8 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS MaintenanceRecord, InspectionTest, Initial_check, Delivery,
   PurchaseOrderMaterial, PurchaseOrderMachinery, PurchaseOrder, Machinery,
   MaterialComposition, Material, Staff, Supplier,
-  Stress_test, Quality_control, Laser_scans,
-  stress_test, quality_control, laser_scans;
+  Stress_test, Quality_control, Laser_scans;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- =====================================================================
