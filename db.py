@@ -345,12 +345,12 @@ INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Descript
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
-    StaffID INT, -- foreign key to Staff table
-    MachineryID INT, -- foreign key to Machinery table
+    StaffID INT NOT NULL, -- foreign key to Staff table
+    MachineryID INT NOT NULL, -- foreign key to Machinery table
     RecordType VARCHAR(50), -- type of maintenance performed
     CreatedDate DATE,
     DamagePercentage DECIMAL(5,2) CHECK (DamagePercentage >= 0 AND DamagePercentage <= 100), -- record dmg percentage of machinery
-    PreviousRecordID INT,
+    PreviousRecordID INT UNIQUE,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID),
     FOREIGN KEY (PreviousRecordID) REFERENCES MaintenanceRecord(RecordID)
@@ -387,11 +387,11 @@ VALUES
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL,
-    RequestedBy INT,
+    RequestedBy INT NOT NULL,
     ApprovedBy INT,
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
-    Status VARCHAR(25),
+    Status VARCHAR(25) CHECK (Status IN ('Pending', 'Delivered')),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
     FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
@@ -499,7 +499,7 @@ VALUES
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
     OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
-    ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
+    ReceivedBy INT NOT NULL, -- Foreign key referencing StaffID in Staff table
     ReceivedDate DATE,
     Remarks TEXT,
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),

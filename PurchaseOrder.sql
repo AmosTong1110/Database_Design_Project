@@ -1,11 +1,11 @@
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
-    RequestedBy INT, -- Foreign key referencing StaffID in Staff table
+    RequestedBy INT NOT NULL, -- Foreign key referencing StaffID in Staff table
     ApprovedBy INT, -- Foreign key referencing StaffID in Staff table
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
-    Status VARCHAR(25),
+    Status VARCHAR(25) CHECK (Status IN ('Pending', 'Delivered')),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
     FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),

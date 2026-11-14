@@ -2,9 +2,11 @@ CREATE DATABASE IF NOT EXISTS constructiondb;
 USE constructiondb;
 
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS maintenancerecord, inspectiontest, initial_check, delivery,
-  purchaseordermaterial, purchaseordermachinery, purchaseorder, machinery,
-  materialcomposition, material, staff, supplier;
+DROP TABLE IF EXISTS MaintenanceRecord, InspectionTest, Initial_check, Delivery,
+  PurchaseOrderMaterial, PurchaseOrderMachinery, PurchaseOrder, Machinery,
+  MaterialComposition, Material, Staff, Supplier,
+  Stress_test, Quality_control, Laser_scans,
+  stress_test, quality_control, laser_scans;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- =====================================================================
@@ -232,11 +234,11 @@ VALUES
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
-    RequestedBy INT, -- Foreign key referencing StaffID in Staff table
+    RequestedBy INT NOT NULL, -- Foreign key referencing StaffID in Staff table
     ApprovedBy INT, -- Foreign key referencing StaffID in Staff table
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
-    Status VARCHAR(25),
+    Status VARCHAR(25) CHECK (Status IN ('Pending', 'Delivered')),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
     FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
@@ -374,10 +376,10 @@ VALUES
 -- =====================================================================
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
-    OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
-    ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
+    OrderID INT NOT NULL, 
+    ReceivedBy INT NOT NULL, 
     ReceivedDate DATE,
-    Remarks VARCHAR(255),
+    Remarks TEXT,
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (ReceivedBy) REFERENCES Staff(StaffID)
 );
@@ -537,12 +539,12 @@ INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Descript
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
-    StaffID INT, -- foreign key to Staff table
-    MachineryID INT, -- foreign key to Machinery table
+    StaffID INT NOT NULL, -- foreign key to Staff table
+    MachineryID INT NOT NULL, -- foreign key to Machinery table
     RecordType VARCHAR(50), -- type of maintenance performed
     CreatedDate DATE,
     DamagePercentage DECIMAL(5,2) CHECK (DamagePercentage >= 0 AND DamagePercentage <= 100), -- record dmg percentage of machinery
-    PreviousRecordID INT,
+    PreviousRecordID INT UNIQUE,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
     FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID),
     FOREIGN KEY (PreviousRecordID) REFERENCES MaintenanceRecord(RecordID)
