@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS InspectionTest;
+
 CREATE TABLE InspectionTest (
     TestID INT PRIMARY KEY,
     InitialCheckID INT NOT NULL,

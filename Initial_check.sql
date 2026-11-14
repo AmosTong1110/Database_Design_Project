@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Initial_check;
+
 CREATE TABLE Initial_check (
     InitialCheckID INT PRIMARY KEY,
     MachineryID INT NOT NULL UNIQUE,

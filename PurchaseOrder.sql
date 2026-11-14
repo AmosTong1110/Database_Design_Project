@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS PurchaseOrder;
+
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table

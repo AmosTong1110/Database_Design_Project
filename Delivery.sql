@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Delivery;
+
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
     OrderID INT NOT NULL, 

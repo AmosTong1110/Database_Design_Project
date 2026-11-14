@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Material;
+
 CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,

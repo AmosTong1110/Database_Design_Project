@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS MaterialComposition;
+
 CREATE TABLE MaterialComposition (
     MaterialID INT NOT NULL,
     ElementName VARCHAR(50) NOT NULL,

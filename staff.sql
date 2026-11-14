@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Staff;
+
 CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
     StaffName VARCHAR(100),

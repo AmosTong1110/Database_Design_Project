@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS PurchaseOrderMachinery;
+
 CREATE TABLE PurchaseOrderMachinery (
     OrderID INT,
     MachineryID INT,

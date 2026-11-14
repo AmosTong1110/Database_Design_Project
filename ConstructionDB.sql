@@ -5,12 +5,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS MaintenanceRecord, InspectionTest, Initial_check, Delivery,
   PurchaseOrderMaterial, PurchaseOrderMachinery, PurchaseOrder, Machinery,
   MaterialComposition, Material, Staff, Supplier,
-  Stress_test, Quality_control, Laser_scans;
-SET FOREIGN_KEY_CHECKS = 1;
+  Stress_test, Quality_control, Laser_scans,
+  stress_test, quality_control, laser_scans;
 
 -- =====================================================================
 -- Supplier
 -- =====================================================================
+DROP TABLE IF EXISTS Supplier;
+
 CREATE TABLE Supplier(
   SupplierID INT PRIMARY KEY,
   SupplierName VARCHAR(100),
@@ -45,6 +47,8 @@ VALUES
 -- =====================================================================
 -- Staff
 -- =====================================================================
+DROP TABLE IF EXISTS Staff;
+
 CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
     StaffName VARCHAR(100),
@@ -78,6 +82,8 @@ VALUES
 -- =====================================================================
 -- Material
 -- =====================================================================
+DROP TABLE IF EXISTS Material;
+
 CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
@@ -113,6 +119,8 @@ VALUES
 -- =====================================================================
 -- MaterialComposition
 -- =====================================================================
+DROP TABLE IF EXISTS MaterialComposition;
+
 CREATE TABLE MaterialComposition (
     MaterialID INT NOT NULL,
     ElementName VARCHAR(50) NOT NULL,
@@ -192,6 +200,8 @@ INSERT INTO MaterialComposition (MaterialID, ElementName, Percentage) VALUES
 -- =====================================================================
 -- Machinery
 -- =====================================================================
+DROP TABLE IF EXISTS Machinery;
+
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
@@ -230,6 +240,8 @@ VALUES
 -- =====================================================================
 -- PurchaseOrder
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrder;
+
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
@@ -298,6 +310,8 @@ VALUES
 -- =====================================================================
 -- PurchaseOrderMachinery
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrderMachinery;
+
 CREATE TABLE PurchaseOrderMachinery (
     OrderID INT,
     MachineryID INT,
@@ -334,6 +348,8 @@ VALUES
 -- =====================================================================
 -- PurchaseOrderMaterial
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrderMaterial;
+
 CREATE TABLE PurchaseOrderMaterial (
     OrderID INT,
     MaterialID INT,
@@ -373,6 +389,8 @@ VALUES
 -- =====================================================================
 -- Delivery
 -- =====================================================================
+DROP TABLE IF EXISTS Delivery;
+
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
     OrderID INT NOT NULL, 
@@ -429,6 +447,8 @@ VALUES
 -- =====================================================================
 -- Initial_check
 -- =====================================================================
+DROP TABLE IF EXISTS Initial_check;
+
 CREATE TABLE Initial_check (
     InitialCheckID INT PRIMARY KEY,
     MachineryID INT NOT NULL UNIQUE,
@@ -461,6 +481,8 @@ INSERT INTO Initial_check (InitialCheckID, MachineryID, RecordDate) VALUES
 -- =====================================================================
 -- InspectionTest
 -- =====================================================================
+DROP TABLE IF EXISTS InspectionTest;
+
 CREATE TABLE InspectionTest (
     TestID INT PRIMARY KEY,
     InitialCheckID INT NOT NULL,
@@ -536,6 +558,8 @@ INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Descript
 -- =====================================================================
 -- MaintenanceRecord
 -- =====================================================================
+DROP TABLE IF EXISTS MaintenanceRecord;
+
 CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
     StaffID INT NOT NULL, -- foreign key to Staff table
@@ -573,3 +597,5 @@ VALUES
     (20, 5, 3, 'Routine Inspection',  '2026-04-22',  0.00, 11),
     (21, 4, 7,  'Hydraulic Repair',   '2026-03-10', 38.00, NULL),
     (22, 5, 11, 'Safety Check',       '2026-03-12', 22.50, NULL);
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Machinery;
+
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table

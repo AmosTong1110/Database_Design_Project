@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS MaintenanceRecord;
+
 CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
     StaffID INT NOT NULL, -- foreign key to Staff table

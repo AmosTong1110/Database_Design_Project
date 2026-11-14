@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS PurchaseOrderMaterial;
+
 CREATE TABLE PurchaseOrderMaterial (
     OrderID INT,
     MaterialID INT,

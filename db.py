@@ -21,6 +21,7 @@ SCHEMA_SQL = """
 -- =====================================================================
 -- 1. Supplier
 -- =====================================================================
+DROP TABLE IF EXISTS Supplier;
 CREATE TABLE Supplier(
   SupplierID INT PRIMARY KEY,
   SupplierName VARCHAR(100),
@@ -55,6 +56,7 @@ VALUES
 -- =====================================================================
 -- 2. Staff
 -- =====================================================================
+DROP TABLE IF EXISTS Staff;
 CREATE TABLE Staff(
     StaffID INT PRIMARY KEY,
     StaffName VARCHAR(100),
@@ -88,6 +90,7 @@ VALUES
 -- =====================================================================
 -- 3. Machinery
 -- =====================================================================
+DROP TABLE IF EXISTS Machinery;
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
@@ -125,6 +128,7 @@ VALUES
 -- =====================================================================
 -- 4. Material
 -- =====================================================================
+DROP TABLE IF EXISTS Material;
 CREATE TABLE Material (
   MaterialID INT PRIMARY KEY,
   SupplierID INT NOT NULL,
@@ -157,6 +161,7 @@ VALUES
 (19, 4, 'Crushed Granite Aggregate', '2026-03-25', 275),
 (20, 5, 'Steel Rebar',               '2026-03-29', 610);
 
+DROP TABLE IF EXISTS MaterialComposition;
 CREATE TABLE MaterialComposition (
     MaterialID INT NOT NULL,
     ElementName VARCHAR(50) NOT NULL,
@@ -236,6 +241,7 @@ INSERT INTO MaterialComposition (MaterialID, ElementName, Percentage) VALUES
 -- =====================================================================
 -- 5. Initial_check
 -- =====================================================================
+DROP TABLE IF EXISTS Initial_check;
 CREATE TABLE Initial_check (
     InitialCheckID INT PRIMARY KEY,
     MachineryID INT NOT NULL UNIQUE,
@@ -268,6 +274,7 @@ INSERT INTO Initial_check (InitialCheckID, MachineryID, RecordDate) VALUES
 -- =====================================================================
 -- 6. InspectionTest
 -- =====================================================================
+DROP TABLE IF EXISTS InspectionTest;
 CREATE TABLE InspectionTest (
     TestID INT PRIMARY KEY,
     InitialCheckID INT NOT NULL,
@@ -343,6 +350,7 @@ INSERT INTO InspectionTest (TestID, InitialCheckID, TestType, TestDate, Descript
 -- =====================================================================
 -- 9. MaintenanceRecord
 -- =====================================================================
+DROP TABLE IF EXISTS MaintenanceRecord;
 CREATE TABLE IF NOT EXISTS MaintenanceRecord(
     RecordID INT PRIMARY KEY,
     StaffID INT NOT NULL, -- foreign key to Staff table
@@ -384,6 +392,7 @@ VALUES
 -- =====================================================================
 -- 10. PurchaseOrder
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrder;
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL,
@@ -424,6 +433,7 @@ VALUES
 -- =====================================================================
 -- 11. PurchaseOrderMachinery
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrderMachinery;
 CREATE TABLE PurchaseOrderMachinery (
     OrderID INT,
     MachineryID INT,
@@ -460,6 +470,7 @@ VALUES
 -- =====================================================================
 -- 12. PurchaseOrderMaterial
 -- =====================================================================
+DROP TABLE IF EXISTS PurchaseOrderMaterial;
 CREATE TABLE PurchaseOrderMaterial (
     OrderID INT,
     MaterialID INT,
@@ -496,6 +507,7 @@ VALUES
 -- =====================================================================
 -- 13. Delivery
 -- =====================================================================
+DROP TABLE IF EXISTS Delivery;
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
     OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
