@@ -1,7 +1,3 @@
--- =====================================================================
--- Views.sql  -  month sorting / reporting (run AFTER all tables are loaded)
--- =====================================================================
-
 -- 1. Helper: one row per order with its total value
 CREATE OR REPLACE VIEW v_order_totals AS
 SELECT OrderID, SUM(LineTotal) AS OrderTotal
