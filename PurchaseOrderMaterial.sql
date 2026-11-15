@@ -1,35 +1,37 @@
+DROP TABLE IF EXISTS PurchaseOrderMaterial;
+
 CREATE TABLE PurchaseOrderMaterial (
     OrderID INT,
     MaterialID INT,
-    Quantity INT NOT NULL CHECK (Quantity > 0),
     UnitPrice DECIMAL(10, 2) NOT NULL CHECK (UnitPrice >= 0),
+    Quantity INT NOT NULL CHECK (Quantity > 0),
     PRIMARY KEY (OrderID, MaterialID),
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (MaterialID) REFERENCES Material(MaterialID)
 );
 
-INSERT INTO PurchaseOrderMaterial (OrderID, MaterialID, Quantity, UnitPrice)
+INSERT INTO PurchaseOrderMaterial (OrderID, MaterialID, UnitPrice, Quantity)
 VALUES
-(21, 1, 500, 15.00),
-(22, 2, 350, 15.00),
-(23, 3, 500, 9.80),
-(24, 4, 280, 45.00),
-(25, 5, 600, 6.20),
-(26, 6, 450, 8.75),
-(27, 7, 320, 22.40),
-(28, 8, 550, 31.00),
-(29, 9, 400, 18.60),
-(30, 10, 250, 27.30),
-(31, 11, 280, 6.50),
-(32, 12, 360, 45.00),
-(33, 13, 520, 12.00),
-(34, 14, 200, 12.00),
-(35, 15, 650, 15.50),
-(36, 16, 300, 20.00),
-(37, 17, 570, 20.00),
-(38, 18, 390, 10.00),
-(39, 19, 275, 20.00),
-(40, 20, 610, 23.00),
-(41, 3, 300, 9.80),
-(41, 8, 200, 31.00),
-(42, 5, 250, 6.20);
+(21, 1,15.00, 500),
+(22, 2, 15.00, 350),
+(23, 3, 9.80, 500),
+(24, 4, 45.00, 280),
+(25, 5, 6.20, 600),
+(26, 6, 8.75, 450),
+(27, 7, 22.40, 320),
+(28, 8, 31.00, 550),
+(29, 9, 18.60, 400),
+(30, 10, 27.30, 250),
+(31, 11, 6.50, 280),
+(32, 12, 45.00, 360),
+(33, 13, 12.00, 520),
+(34, 14, 12.00, 200),
+(35, 15, 15.50, 650),
+(36, 16, 20.00, 300),
+(37, 17, 20.00, 570),
+(38, 18, 10.00, 390),
+(39, 19, 20.00, 275),
+(40, 20, 23.00, 610),
+(41, 3, 9.80, 300),
+(41, 8, 31.00, 200),
+(42, 5, 6.20, 250);

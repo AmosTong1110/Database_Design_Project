@@ -41,19 +41,11 @@ SELECT 'Initial Check', ic.InitialCheckID, ic.RecordDate, mc.MachineryName
 FROM Initial_check ic
 JOIN Machinery mc ON mc.MachineryID = ic.MachineryID
 UNION ALL
-SELECT 'Stress Test', StressID, StressDate,
-       CONCAT(IF(Status, 'Pass', 'FAIL'), ' - ', Description)
-FROM Stress_test
+SELECT it.TestType, it.TestID, it.TestDate,
+       CONCAT(IF(it.Passed, 'Pass', 'FAIL'), ' - ', it.Description)
+FROM InspectionTest it
 UNION ALL
-SELECT 'Quality Control', QualityID, QualityDate,
-       CONCAT(IF(Status, 'Pass', 'FAIL'), ' - ', Description)
-FROM Quality_control
-UNION ALL
-SELECT 'Laser Scan', LaserID, LaserDate,
-       CONCAT(IF(Status, 'Pass', 'FAIL'), ' - ', Description)
-FROM Laser_scans
-UNION ALL
-SELECT 'Material', m.MaterialID, m.MaterialDate,
+SELECT 'Material', m.MaterialID, m.StockInDate,
        CONCAT(m.MaterialName, ' - ', s.SupplierName, ' (stock ', m.Stock, ')')
 FROM Material m
 JOIN Supplier s ON s.SupplierID = m.SupplierID;
@@ -62,7 +54,7 @@ JOIN Supplier s ON s.SupplierID = m.SupplierID;
 --    p_year      : e.g. 2026, or NULL for all years
 --    p_month     : 1-12, or 0 / NULL for the whole year
 --    p_type      : 'All' / NULL, or one of: Purchase Order, Delivery, Maintenance,
---                  Initial Check, Stress Test, Quality Control, Laser Scan, Material
+--                  Initial Check, Stress Test, Quality Control, Laser Scan (or TestType), Material
 --    p_direction : 'ASC' (oldest first) or 'DESC' (newest first)
 DROP PROCEDURE IF EXISTS sp_records_by_month;
 DELIMITER //

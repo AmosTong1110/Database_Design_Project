@@ -1,10 +1,12 @@
+DROP TABLE IF EXISTS Machinery;
+
 CREATE TABLE Machinery(
   MachineryID INT PRIMARY KEY,
   SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
   MachineryName VARCHAR(100),
   Description VARCHAR(255),
   PhotoPath VARCHAR(255),
-  Status VARCHAR(50) NOT NULL DEFAULT 'Available'
+  Status VARCHAR(25) NOT NULL DEFAULT 'Available'
     CHECK (Status IN ('Available', 'In Use', 'Under Maintenance', 'Out of Service')),
   FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );

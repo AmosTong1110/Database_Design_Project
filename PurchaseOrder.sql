@@ -1,19 +1,21 @@
+DROP TABLE IF EXISTS PurchaseOrder;
+
 CREATE TABLE PurchaseOrder (
     OrderID INT PRIMARY KEY,
     SupplierID INT NOT NULL, -- Foreign key referencing SupplierID in Supplier table
-    RequestBy INT, -- Foreign key referencing StaffID in Staff table
+    RequestedBy INT NOT NULL, -- Foreign key referencing StaffID in Staff table
     ApprovedBy INT, -- Foreign key referencing StaffID in Staff table
     OrderDate DATE,
     ExpectedDeliveryDate DATE,
-    Status VARCHAR(25),
+    Status VARCHAR(25) CHECK (Status IN ('Pending', 'Delivered')),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
-    FOREIGN KEY (RequestBy) REFERENCES Staff(StaffID),
+    FOREIGN KEY (RequestedBy) REFERENCES Staff(StaffID),
     FOREIGN KEY (ApprovedBy) REFERENCES Staff(StaffID),
-    CHECK (ApprovedBy <> RequestBy)
+    CHECK (ApprovedBy <> RequestedBy)
 );
 
 INSERT INTO PurchaseOrder
-(OrderID, SupplierID, RequestBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
+(OrderID, SupplierID, RequestedBy, ApprovedBy, OrderDate, ExpectedDeliveryDate, Status)
 VALUES
 -- Machinery purchase orders (1–20)
 (1,  1,  6, 11, '2025-12-15', '2026-01-02', 'Delivered'),
@@ -60,5 +62,6 @@ VALUES
 (40,  5,  6, 20, '2026-03-22', '2026-03-29', 'Delivered'),
 
 -- Restock orders still waiting for delivery (41-42)
-(41,  3,  6, 11, '2026-04-06', '2026-04-14', 'Pending'),
-(42,  5,  7, 12, '2026-04-10', '2026-04-18', 'Pending');
+(41,  3,  6, NULL, '2026-04-06', '2026-04-14', 'Pending'),
+(42,  5,  7, NULL, '2026-04-10', '2026-04-18', 'Pending');
+

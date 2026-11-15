@@ -1,9 +1,11 @@
+DROP TABLE IF EXISTS Delivery;
+
 CREATE TABLE Delivery (
     DeliveryID INT PRIMARY KEY,
-    OrderID INT NOT NULL, -- Foreign key referencing OrderID in PurchaseOrder table
-    ReceivedBy INT, -- Foreign key referencing StaffID in Staff table
+    OrderID INT NOT NULL, 
+    ReceivedBy INT NOT NULL, 
     ReceivedDate DATE,
-    Remarks VARCHAR(255),
+    Remarks TEXT,
     FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (ReceivedBy) REFERENCES Staff(StaffID)
 );
