@@ -1,3 +1,10 @@
+-- =====================================================================
+-- Views.sql  -  month sorting / reporting
+-- Run ConstructionDB.sql FIRST, then run this file (database: constructiondb)
+-- =====================================================================
+
+USE constructiondb;
+
 -- 1. Helper: one row per order with its total value
 CREATE OR REPLACE VIEW v_order_totals AS
 SELECT OrderID, SUM(LineTotal) AS OrderTotal
@@ -54,7 +61,7 @@ JOIN Supplier s ON s.SupplierID = m.SupplierID;
 --    p_year      : e.g. 2026, or NULL for all years
 --    p_month     : 1-12, or 0 / NULL for the whole year
 --    p_type      : 'All' / NULL, or one of: Purchase Order, Delivery, Maintenance,
---                  Initial Check, Stress Test, Quality Control, Laser Scan (or TestType), Material
+--                  Initial Check, Stress Test, Quality Control, Laser Scan, Material
 --    p_direction : 'ASC' (oldest first) or 'DESC' (newest first)
 DROP PROCEDURE IF EXISTS sp_records_by_month;
 DELIMITER //
