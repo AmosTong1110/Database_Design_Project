@@ -41,7 +41,7 @@ CATEGORIES = {
                FROM PurchaseOrder p
                JOIN Supplier sup ON p.SupplierID = sup.SupplierID
                JOIN Staff r ON p.RequestedBy = r.StaffID
-               JOIN Staff a ON p.ApprovedBy = a.StaffID""",
+               LEFT JOIN Staff a ON p.ApprovedBy = a.StaffID""",
         date="p.OrderDate", mine="(p.RequestedBy = ? OR p.ApprovedBy = ?)"),
     "Deliveries": dict(
         sql="""SELECT d.DeliveryID AS ID, d.ReceivedDate AS Date,
