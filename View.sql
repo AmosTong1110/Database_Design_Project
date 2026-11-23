@@ -55,13 +55,18 @@ UNION ALL
 SELECT 'Material', m.MaterialID, m.StockInDate,
        CONCAT(m.MaterialName, ' - ', s.SupplierName, ' (stock ', m.Stock, ')')
 FROM Material m
-JOIN Supplier s ON s.SupplierID = m.SupplierID;
+JOIN Supplier s ON s.SupplierID = m.SupplierID
+UNION ALL
+SELECT 'Document Loan', l.LoanID, l.IssuedDate,
+       CONCAT(d.DocumentTitle, ' -> ', l.AuditorName, ' (', l.Status, ')')
+FROM DocumentAuditLoan l
+JOIN TechnicalDocument d ON d.DocumentID = l.DocumentID;
 
 -- 4. The sorting function
 --    p_year      : e.g. 2026, or NULL for all years
 --    p_month     : 1-12, or 0 / NULL for the whole year
 --    p_type      : 'All' / NULL, or one of: Purchase Order, Delivery, Maintenance,
---                  Initial Check, Stress Test, Quality Control, Laser Scan, Material
+--                  Initial Check, Stress Test, Quality Control, Laser Scan, Material, Document Loan
 --    p_direction : 'ASC' (oldest first) or 'DESC' (newest first)
 DROP PROCEDURE IF EXISTS sp_records_by_month;
 DELIMITER //

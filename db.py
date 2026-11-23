@@ -591,6 +591,72 @@ VALUES
 (38, 38, 15, '2026-03-21', 'Delivered on schedule'),
 (39, 39, 16, '2026-03-25', 'Delivered on schedule'),
 (40, 40, 19, '2026-03-29', 'Delivered on schedule');
+
+-- =====================================================================
+-- 14. TechnicalDocument
+-- =====================================================================
+DROP TABLE IF EXISTS TechnicalDocument;
+CREATE TABLE TechnicalDocument (
+    DocumentID INT PRIMARY KEY,
+    DocumentTitle VARCHAR(150) NOT NULL,
+    DocumentType VARCHAR(50) NOT NULL 
+        CHECK (DocumentType IN ('Machinery Manual', 'Structural Blueprint', 'Safety Data Sheet (MSDS)', 'Test Certification', 'Wiring Schematic')),
+    ConfidentialityLevel VARCHAR(25) NOT NULL 
+        CHECK (ConfidentialityLevel IN ('Internal', 'Confidential', 'Strictly Proprietary')),
+    MachineryID INT NULL,
+    MaterialID INT NULL,
+    FOREIGN KEY (MachineryID) REFERENCES Machinery(MachineryID) ON DELETE SET NULL,
+    FOREIGN KEY (MaterialID) REFERENCES Material(MaterialID) ON DELETE SET NULL
+);
+
+INSERT INTO TechnicalDocument (DocumentID, DocumentTitle, DocumentType, ConfidentialityLevel, MachineryID, MaterialID) 
+VALUES
+(1,  'Hydraulic Excavator Maintenance Manual',          'Machinery Manual',           'Internal',             1,    NULL),
+(2,  'Tower Crane Structural & Rigging Blueprint',      'Structural Blueprint',       'Strictly Proprietary', 2,    NULL),
+(3,  'Concrete Mixer Hydraulic Schematics',             'Wiring Schematic',           'Confidential',         3,    NULL),
+(4,  'Bulldozer Powertrain Technical Specification',    'Machinery Manual',           'Internal',             4,    NULL),
+(5,  'Mobile Crane Hydraulic & Electrical Schematic',   'Wiring Schematic',           'Confidential',         5,    NULL),
+(6,  'Portland Cement Lab Assay & Chemical Analysis',   'Safety Data Sheet (MSDS)',   'Confidential',         NULL, 1),
+(7,  'High-Tensile Steel Rebar Mill Test Certification','Test Certification',         'Internal',             NULL, 7),
+(8,  'Washed Sand Aggregate Particle Size Report',      'Safety Data Sheet (MSDS)',   'Internal',             NULL, 3),
+(9,  'Structural Steel Plate Grade Certification',      'Test Certification',         'Confidential',         NULL, 4),
+(10, 'Crawler Crane Safe Load Indicator Calibration',   'Test Certification',         'Strictly Proprietary', 15,   NULL),
+(11, 'Apartment Cluster Master Foundation Blueprint',   'Structural Blueprint',       'Strictly Proprietary', NULL, NULL),
+(12, 'High-Rise Tower Drainage & Pipework Layout',      'Structural Blueprint',       'Strictly Proprietary', NULL, NULL);
+
+-- =====================================================================
+-- 15. DocumentAuditLoan
+-- =====================================================================
+DROP TABLE IF EXISTS DocumentAuditLoan;
+CREATE TABLE DocumentAuditLoan (
+    LoanID INT PRIMARY KEY,
+    DocumentID INT NOT NULL,
+    IssuedBy INT NOT NULL,
+    AuditorName VARCHAR(100) NOT NULL,
+    AuditorOrganization VARCHAR(100) NOT NULL,
+    IssuedDate DATE NOT NULL,
+    DueDate DATE NOT NULL,
+    ReturnedDate DATE NULL,
+    Status VARCHAR(25) NOT NULL 
+        CHECK (Status IN ('Shared', 'Returned', 'Overdue')),
+    FOREIGN KEY (DocumentID) REFERENCES TechnicalDocument(DocumentID) ON DELETE CASCADE,
+    FOREIGN KEY (IssuedBy) REFERENCES Staff(StaffID)
+);
+
+INSERT INTO DocumentAuditLoan (LoanID, DocumentID, IssuedBy, AuditorName, AuditorOrganization, IssuedDate, DueDate, ReturnedDate, Status)
+VALUES
+(1, 1,  9, 'Marcus Vance',      'Bureau Veritas Audits',          '2026-01-10', '2026-01-20', '2026-01-18', 'Returned'),
+(2, 6, 10, 'Dr. Elena Rostova', 'SGS Industrial Inspection',      '2026-01-15', '2026-01-25', '2026-01-24', 'Returned'),
+(3, 7, 18, 'Kevin Tan',         'SIRIM Quality Certification',    '2026-02-01', '2026-02-12', '2026-02-10', 'Returned'),
+(4, 4,  9, 'Rachel Adams',      'ISO Compliance Body',            '2026-02-05', '2026-02-15', '2026-02-14', 'Returned'),
+(5, 9, 10, 'Michael Chang',     'Lloyd''s Register Inspection',   '2026-02-12', '2026-02-22', '2026-02-20', 'Returned'),
+(6, 3,  9, 'Sarah Jenkins',     'TUV Rheinland Compliance',       '2026-03-10', '2026-03-25', NULL,         'Shared'),
+(7, 8, 18, 'Derek Wong',        'National Building Inspectorate', '2026-03-15', '2026-03-30', NULL,         'Shared'),
+(8,  2, 10, 'Robert Stirling',   'Global Construction Safety',     '2026-01-05', '2026-01-22', NULL,         'Overdue'),
+(9, 10, 18, 'Arthur Pendelton',  'Heavy Machinery Inspectors',     '2026-01-12', '2026-01-28', NULL,         'Overdue'),
+(10, 11, 9, 'David Lee',         'Urban Planning Oversight Board', '2026-02-01', '2026-02-15', NULL,         'Overdue'),
+(11, 5, 10, 'Fiona Campbell',    'Apex Engineering Audits',        '2026-02-10', '2026-02-24', NULL,         'Overdue'),
+(12, 12, 18, 'Jonathan Brooks',  'Municipal Safety Council',       '2026-02-18', '2026-03-04', NULL,         'Overdue');
 """
 
 

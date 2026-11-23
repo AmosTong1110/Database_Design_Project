@@ -82,6 +82,20 @@ CATEGORIES = {
                FROM MaterialComposition mc
                JOIN Material m ON mc.MaterialID = m.MaterialID""",
         date="m.StockInDate", mine=None),
+    "Document Audit Loans": dict(
+        sql="""SELECT l.LoanID AS ID, l.IssuedDate AS Date,
+                      d.DocumentTitle AS Document,
+                      d.ConfidentialityLevel AS Confidentiality,
+                      l.AuditorName AS Auditor,
+                      l.AuditorOrganization AS Organization,
+                      s.StaffName AS 'Issued By',
+                      l.DueDate AS 'Due Date',
+                      COALESCE(l.ReturnedDate, 'Not Returned') AS 'Returned Date',
+                      l.Status
+               FROM DocumentAuditLoan l
+               JOIN TechnicalDocument d ON l.DocumentID = d.DocumentID
+               JOIN Staff s ON l.IssuedBy = s.StaffID""",
+        date="l.IssuedDate", mine="l.IssuedBy = ?"),
 }
 
 
@@ -122,7 +136,8 @@ def get_years():
             SELECT strftime('%Y', ReceivedDate) FROM Delivery UNION
             SELECT strftime('%Y', RecordDate) FROM Initial_check UNION
             SELECT strftime('%Y', TestDate) FROM InspectionTest UNION
-            SELECT strftime('%Y', StockInDate) FROM Material
+            SELECT strftime('%Y', StockInDate) FROM Material UNION
+            SELECT strftime('%Y', IssuedDate) FROM DocumentAuditLoan
         ) WHERE y IS NOT NULL ORDER BY y"""
     return [r[0] for r in query(sql)[1]]
 
