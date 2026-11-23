@@ -10,7 +10,7 @@ CREATE TABLE DocumentAuditLoan (
     DueDate DATE NOT NULL,
     ReturnedDate DATE NULL, -- NULL indicates document is currently NOT returned
     Status VARCHAR(25) NOT NULL 
-        CHECK (Status IN ('Shared', 'Returned', 'Overdue')),
+        CHECK (Status IN ('Shared', 'Returned', 'Cleared', 'Overdue')),
     FOREIGN KEY (DocumentID) REFERENCES TechnicalDocument(DocumentID) ON DELETE CASCADE,
     FOREIGN KEY (IssuedBy) REFERENCES Staff(StaffID)
 );
