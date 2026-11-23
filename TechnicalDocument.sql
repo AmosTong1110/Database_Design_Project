@@ -13,7 +13,7 @@ CREATE TABLE TechnicalDocument (
     FOREIGN KEY (MaterialID) REFERENCES Material(MaterialID) ON DELETE SET NULL
 );
 
-INSERT INTO TechnicalDocument (DocumentID, DocumentTitle, DocumentType, ConfidentialityLevel, MachineryID, MaterialID) 
+INSERT INTO TechnicalDocument (DocumentID, DocumentTitle, DocumentType, ConfidentialityLevel, MachineryID, MaterialID)
 VALUES
 (1, 'Hydraulic Excavator Maintenance Manual', 'Machinery Manual', 'Internal', 1, NULL),
 (2, 'Tower Crane Structural & Rigging Blueprint', 'Structural Blueprint', 'Strictly Proprietary', 2, NULL),
@@ -28,10 +28,10 @@ VALUES
 (11, 'Apartment Cluster Master Foundation Blueprint', 'Structural Blueprint', 'Strictly Proprietary', NULL, NULL),
 (12, 'High-Rise Tower Drainage & Pipework Layout', 'Structural Blueprint', 'Strictly Proprietary', NULL, NULL),
 (13, 'Wheel Loader Operation and Safety Manual', 'Machinery Manual', 'Internal', 6, NULL),
-(14, 'Asphalt Paver Electrical Wiring Diagram', 'Wiring Schematic', 'Confidential', 7, NULL),
-(15, 'Industrial Generator Maintenance Guide', 'Machinery Manual', 'Internal', 8, NULL),
-(16, 'Reinforced Concrete Strength Test Report', 'Test Certification', 'Confidential', NULL, 5),
-(17, 'Protective Coating Chemical Safety Report', 'Safety Data Sheet (MSDS)', 'Strictly Proprietary', NULL, 6),
+(14, 'Road Roller Operation and Maintenance Manual', 'Machinery Manual', 'Confidential', 7, NULL),
+(15, 'Dump Truck Operation and Maintenance Manual', 'Machinery Manual', 'Internal', 8, NULL),
+(16, 'Hydrated Lime Material Safety Data Sheet', 'Safety Data Sheet (MSDS)', 'Confidential', NULL, 5),
+(17, 'Washed Sand Material Safety Data Sheet', 'Safety Data Sheet (MSDS)', 'Strictly Proprietary', NULL, 6),
 (18, 'Steel Frame Construction Blueprint', 'Structural Blueprint', 'Strictly Proprietary', NULL, NULL),
-(19, 'Forklift Hydraulic System Schematic', 'Wiring Schematic', 'Confidential', 9, NULL),
-(20, 'Crushed Granite Aggregate Quality Certificate', 'Test Certification', 'Internal', NULL, 8);
+(19, 'Forklift Hydraulic System Schematic', 'Wiring Schematic', 'Confidential', 11, NULL),
+(20, 'Crushed Granite Aggregate Quality Certificate', 'Test Certification', 'Internal', NULL, 16);
