@@ -605,7 +605,7 @@ DROP TABLE IF EXISTS TechnicalDocument;
 
 CREATE TABLE TechnicalDocument (
     DocumentID INT PRIMARY KEY,
-    DocumentTitle VARCHAR(150) NOT NULL,
+    DocumentTitle VARCHAR(255) NOT NULL,
     DocumentType VARCHAR(50) NOT NULL 
         CHECK (DocumentType IN ('Machinery Manual', 'Structural Blueprint', 'Safety Data Sheet (MSDS)', 'Test Certification', 'Wiring Schematic')),
     ConfidentialityLevel VARCHAR(25) NOT NULL 
@@ -645,7 +645,7 @@ CREATE TABLE DocumentAuditLoan (
     IssuedDate DATE NOT NULL,
     DueDate DATE NOT NULL,
     ReturnedDate DATE NULL, -- NULL indicates document is currently NOT returned
-    Status VARCHAR(25) NOT NULL 
+    Status VARCHAR(20) NOT NULL 
         CHECK (Status IN ('Shared', 'Returned', 'Cleared', 'Overdue')),
     FOREIGN KEY (DocumentID) REFERENCES TechnicalDocument(DocumentID) ON DELETE CASCADE,
     FOREIGN KEY (IssuedBy) REFERENCES Staff(StaffID)
