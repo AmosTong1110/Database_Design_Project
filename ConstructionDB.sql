@@ -655,7 +655,7 @@ INSERT INTO DocumentAuditLoan (LoanID, DocumentID, IssuedBy, AuditorName, Audito
 VALUES
 (1, 1,  9, 'Marcus Vance',      'Bureau Veritas Audits',          '2026-01-10', '2026-01-20', '2026-01-18', 'Returned'),
 (2, 6, 10, 'Dr. Elena Rostova', 'SGS Industrial Inspection',      '2026-01-15', '2026-01-25', '2026-01-24', 'Returned'),
-(3, 7, 18, 'Kevin Tan',         'SIRIM Quality Certification',    '2026-02-01', '2026-02-12', 'NULL', 'Cleared'),
+(3, 7, 18, 'Kevin Tan',         'SIRIM Quality Certification',    '2026-02-01', '2026-02-12', NULL, 'Cleared'),
 (4, 4,  9, 'Rachel Adams',      'ISO Compliance Body',            '2026-02-05', '2026-02-15', '2026-02-14', 'Returned'),
 (5, 9, 10, 'Michael Chang',     'Lloyd''s Register Inspection',   '2026-02-12', '2026-02-22', '2026-02-20', 'Returned'),
 (6, 3,  9, 'Sarah Jenkins',     'TUV Rheinland Compliance',       '2026-03-10', '2026-03-25', NULL,         'Shared'),
